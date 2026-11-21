@@ -48,7 +48,12 @@ export default function Motion() {
   // First load: wait briefly for fonts so the headline animates in its real typeface
   useEffect(() => {
     const fonts = document.fonts ? document.fonts.ready : Promise.resolve();
-    Promise.race([fonts, new Promise((r) => setTimeout(r, 700))]).then(() => {
+    const introDone = new Promise((r) => {
+      if (window.__introDone) return r();
+      window.addEventListener("anveya:intro-done", r, { once: true });
+      setTimeout(r, 4000); // safety net
+    });
+    Promise.all([Promise.race([fonts, new Promise((r) => setTimeout(r, 700))]), introDone]).then(() => {
       playHero();
       if (location.hash) setTimeout(() => scrollToHash(location.hash, true), 50);
     });

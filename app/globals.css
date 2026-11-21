@@ -1094,3 +1094,14 @@ p { margin: 0 0 1em; }
   .lg-cols { grid-template-columns: 1fr; }
 }
 @media (max-width: 520px) { .lg-toc { columns: 1; } .lg-sec { padding: 22px 20px 16px; } }
+
+/* ==========================================================
+   LOGO INTRO (first load) — logo only, on the plain cream page
+   ========================================================== */
+.intro { position: fixed; inset: 0; z-index: 500; display: grid; place-items: center; background: var(--cream); transition: opacity .8s var(--ease); }
+.intro.out { opacity: 0; pointer-events: none; }
+.intro-logo { width: auto; height: clamp(150px, 26vh, 240px); opacity: 0; transform: translateY(18px) scale(.94); animation: introIn 1.1s var(--ease) .1s forwards; }
+.intro.out .intro-logo { animation: introOut .7s var(--ease-io) forwards; }
+@keyframes introIn { to { opacity: 1; transform: none; } }
+@keyframes introOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-10px) scale(1.04); } }
+html.intro-on, html.intro-on body { overflow: hidden; }
