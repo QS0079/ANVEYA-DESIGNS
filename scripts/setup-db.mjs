@@ -21,8 +21,13 @@ const conn = await mysql.createConnection({
   multipleStatements: true,
 });
 
-let sql = fs.readFileSync(path.resolve("database/schema.sql"), "utf8").replaceAll("`ANEYA`", `\`${DB}\``);
-await conn.query(sql);
+try {
+  await conn.query(`CREATE DATABASE IF NOT EXISTS \`${DB}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`);
+} catch (e) {
+  console.warn("CREATE DATABASE skipped (create it in your hosting panel):", e.code || e.message);
+}
+await conn.query(`USE \`${DB}\``);
+await conn.query(fs.readFileSync(path.resolve("database/schema.sql"), "utf8"));
 // upgrade tables created by earlier versions
 await conn.query(`USE \`${DB}\``);
 const [cols] = await conn.query("SELECT COLUMN_NAME, IS_NULLABLE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'leads'");

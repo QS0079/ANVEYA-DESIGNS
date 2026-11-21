@@ -1,7 +1,5 @@
 -- Anveya Designs database (MySQL / MariaDB)
--- Import in phpMyAdmin, or run: npm run db:setup
-CREATE DATABASE IF NOT EXISTS `ANEYA` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `ANEYA`;
+-- phpMyAdmin: select your database first, then Import this file. Or run: npm run db:setup
 
 CREATE TABLE IF NOT EXISTS admin_users (
   id INT AUTO_INCREMENT PRIMARY KEY,
