@@ -1,0 +1,23 @@
+{
+  "name": "anveya-designs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "db:setup": "node scripts/setup-db.mjs"
+  },
+  "dependencies": {
+    "@fontsource/bodoni-moda": "^5.1.0",
+    "@fontsource/manrope": "^5.1.0",
+    "@fontsource/pinyon-script": "^5.1.0",
+    "bcryptjs": "^2.4.3",
+    "jose": "^5.9.6",
+    "lenis": "^1.1.18",
+    "mysql2": "^3.11.5",
+    "next": "15.5.29",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  }
+}
