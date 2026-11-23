@@ -80,6 +80,10 @@ export default async function Home() {
                 <Up as="p" className="lead" delay={150}><strong style={{ fontWeight: 500, color: "var(--ink)" }}>Every space has a story, and we believe good design brings that story to life.</strong></Up>
                 <Up as="p" className="lead" delay={220}>Anveya Designs is an interior design studio focused on creating residential and commercial spaces that combine thoughtful planning with distinctive design. We believe that successful interiors go beyond colours, furniture and finishes. They are about understanding the people who use a space and translating their requirements into meaningful design solutions.</Up>
                 <Up as="p" className="lead" delay={290}>From comfortable homes to inspiring workspaces, we approach every project with creativity, careful planning and an eye for detail.</Up>
+                <Up className="quiet-stats" delay={330}>
+                  <div><span className="qs-num">8+</span><span className="qs-label">Years of experience</span></div>
+                  <div><span className="qs-num">70+</span><span className="qs-label">Projects delivered</span></div>
+                </Up>
                 <Up delay={360}><a href="/about-us" className="link-arrow mt-1">Know More About Us <span className="arr"><Arrow /></span></a></Up>
               </div>
               <div className="imgs">
