@@ -11,7 +11,7 @@ import "./globals.css";
 export const metadata = {
   metadataBase: new URL(process.env.SITE_URL || "http://localhost:3000"),
   title: {
-    default: "Residential & Commercial Interior Designers | Anveya Designs",
+    default: "Best Interior Designers in Pune | Anveya Designs",
     template: "%s",
   },
   description:

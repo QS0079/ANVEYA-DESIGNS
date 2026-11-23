@@ -9,7 +9,7 @@ import { IMG } from "@/lib/defaults";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Residential & Commercial Interior Designers | Anveya Designs",
+  title: "Best Interior Designers in Pune | Anveya Designs",
   description:
     "Anveya Designs creates beautiful, functional residential and commercial interiors tailored to your lifestyle, preferences and business needs.",
 };
