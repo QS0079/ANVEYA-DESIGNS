@@ -15,7 +15,7 @@ export async function POST(req) {
     rows = await query("SELECT id, name, email, password_hash FROM admin_users WHERE LOWER(email) = ? LIMIT 1", [e]);
   } catch (err) {
     console.error("[login] DB error:", err.message);
-    return NextResponse.json({ error: "Database connection failed. Check your .env.local DB settings." }, { status: 500 });
+    return NextResponse.json({ error: "Database connection failed. Check the DB_ settings in your environment variables." }, { status: 500 });
   }
   const user = rows[0];
   const ok = user && (await bcrypt.compare(String(password), user.password_hash));

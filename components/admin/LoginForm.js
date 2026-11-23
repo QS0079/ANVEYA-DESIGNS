@@ -1,6 +1,13 @@
 "use client";
 import { useState } from "react";
 
+const MailIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3.5 6.5 8.5 6 8.5-6" /></svg>
+);
+const LockIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2" /><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" /></svg>
+);
+
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,23 +36,33 @@ export default function LoginForm() {
   };
 
   return (
-    <form className="box" onSubmit={submit}>
-      <img src="/brand/logo-dark.png" alt="Anveya Designs" className="login-logo-sm" width="800" height="745" />
-      <div className="eyebrow">Welcome back</div>
-      <h1>Sign in</h1>
-      <p className="muted small" style={{ marginBottom: 34 }}>Manage enquiries, FAQs and site details.</p>
-      {err && <div className="err-box">{err}</div>}
-      <div className="field">
-        <label htmlFor="em">Email</label>
-        <input id="em" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required />
+    <form className="l2-card" onSubmit={submit}>
+      <img src="/brand/logo-dark.png" alt="Anveya Designs" className="l2-card-logo" width="800" height="745" />
+      <div className="l2-kicker"><span />Welcome back</div>
+      <h1>Sign in to your dashboard</h1>
+      <p className="l2-lead">Use your admin email and password to manage enquiries and FAQs.</p>
+
+      {err && <div className="l2-err" role="alert">{err}</div>}
+
+      <label className="l2-label" htmlFor="em">Email address</label>
+      <div className="l2-input">
+        <MailIcon />
+        <input id="em" type="email" placeholder="admin@anveya.com" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required />
       </div>
-      <div className="field pw">
-        <label htmlFor="pw">Password</label>
-        <input id="pw" type={show ? "text" : "password"} autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <button type="button" onClick={() => setShow((s) => !s)}>{show ? "Hide" : "Show"}</button>
+
+      <label className="l2-label" htmlFor="pw">Password</label>
+      <div className="l2-input">
+        <LockIcon />
+        <input id="pw" type={show ? "text" : "password"} placeholder="Enter your password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <button type="button" className="l2-show" onClick={() => setShow((s) => !s)} aria-label={show ? "Hide password" : "Show password"}>{show ? "Hide" : "Show"}</button>
       </div>
-      <button className="btn solid" style={{ width: "100%" }} disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
-      <p className="small muted" style={{ marginTop: 24 }}><a href="/" style={{ textDecoration: "underline", textUnderlineOffset: 3 }}>← Back to website</a></p>
+
+      <button className="l2-btn" disabled={busy}>
+        {busy ? "Signing in…" : "Sign in"}
+        {!busy && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" /></svg>}
+      </button>
+
+      <a className="l2-back" href="/">← Back to website</a>
     </form>
   );
 }

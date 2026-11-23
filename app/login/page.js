@@ -6,15 +6,22 @@ export const metadata = { title: "Admin Login | Anveya Designs", robots: { index
 
 export default function LoginPage() {
   return (
-    <div className="login">
-      <div className="art">
-        <img src={IMG.hero} alt="" />
-        <div className="txt">
-          <div className="eyebrow" style={{ color: "rgba(249,243,232,.7)" }}>Admin Panel</div>
-          <img src="/brand/logo-light.png" alt="Anveya Designs" className="login-logo" width="800" height="745" />
+    <div className="l2" style={{ "--l2-img": `url(${IMG.hero})` }}>
+      <aside className="l2-art" aria-hidden="true">
+        <img className="l2-bg" src={IMG.hero} alt="" />
+        <div className="l2-shade" />
+        <img className="l2-logo" src="/brand/logo-light.png" alt="" width="800" height="745" />
+        <div className="l2-copy">
+          <div className="l2-eye"><span />Admin Panel</div>
+          <p className="l2-quote">Every beautiful space starts with an <em>idea</em>.</p>
+          <p className="l2-sub">Enquiries, leads and FAQs for anveyadesigns.com, in one place.</p>
         </div>
-      </div>
-      <div className="side"><LoginForm /></div>
+      </aside>
+      <main className="l2-side">
+        <img className="l2-mark" src="/brand/logo-mark.png" alt="" aria-hidden="true" width="500" height="495" />
+        <LoginForm />
+        <p className="l2-foot">© {new Date().getFullYear()} Anveya Designs · Admin access only</p>
+      </main>
     </div>
   );
 }
