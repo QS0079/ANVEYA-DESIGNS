@@ -130,7 +130,7 @@ export default function AdminShell({ user, children }) {
 
         <div className="adm-group">Quick actions</div>
         <nav className="adm-nav">
-          <a href="/api/admin/leads/export"><Icon n="csv" /><span>Export leads (CSV)</span></a>
+          <a href="/api/admin/leads/export"><Icon n="csv" /><span>Export all leads (CSV)</span></a>
           <a href="/" target="_blank" rel="noopener noreferrer"><Icon n="site" /><span>View website</span></a>
         </nav>
 
