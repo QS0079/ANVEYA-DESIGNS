@@ -1181,3 +1181,16 @@ html.intro-on, html.intro-on body { overflow: hidden; }
   .cta-band .btn-row { flex-direction: column; align-items: center; }
 }
 @media (max-width: 560px) { .hero .btn-row .link-arrow { margin-left: 0 !important; align-self: flex-start !important; } }
+
+/* Hero on phones: never squeeze content into a fixed-height box — the hero grows with its
+   content (no overlap with the header on short screens) and scrolls normally. */
+@media (max-width: 699px) {
+  .hero, .hero.short, .hero.mini { position: relative; height: auto; }
+  .hero { min-height: 100vh; min-height: 100svh; }
+  .hero.short { min-height: 78vh; min-height: 78svh; }
+  .hero.mini { min-height: 0; }
+  .hero .inner { height: auto; min-height: inherit; justify-content: center; padding-top: calc(var(--header-h) + 28px); padding-bottom: 48px; }
+  .hero.mini .inner { padding-top: calc(var(--header-h) + 40px); padding-bottom: 56px; }
+}
+/* Desktop/tablet heroes that had to grow taller than the screen also scroll normally */
+.hero.grow { position: relative; }
