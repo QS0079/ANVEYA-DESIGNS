@@ -20,7 +20,7 @@ DB_NAME=ANEYA
 ## 3. Install & run
 ```bash
 npm install
-npm run db:setup      # creates database ANEYA, tables, admin user and the 6 FAQs
+npm run db:setup      # creates database ANEYA, tables and the admin user
 npm run dev           # http://localhost:3000
 ```
 `db:setup` is optional — the app also creates the database and tables automatically on first request.
@@ -35,10 +35,11 @@ Production: `npm run build && npm start`
 
 | Section | What it does |
 |---|---|
-| Dashboard | Totals, new leads, last 7 days, status / property-type breakdown, recent enquiries |
-| Sidebar | Dashboard · Leads (with new-lead badge) · FAQs · Export leads (CSV) · View website · Log out |
+| Dashboard | Totals, new leads, last 7 / 30 days, status / property-type breakdown, recent enquiries |
+| Sidebar | Dashboard · Leads (with new-lead badge) · Export leads (CSV) · View website · Log out |
 | Leads | Every enquiry from the Home and Contact forms · search · filter by status/type · open a lead to call / WhatsApp / email, change status (New → Contacted → Qualified → Proposal Sent → Won/Lost), add internal notes, delete · Export CSV |
-| FAQs | Add, edit, delete, show/hide, re-order — the Home page FAQ section updates instantly |
+
+Home page FAQs are not managed in the admin panel — edit them in **`lib/defaults.js`** (`FAQS`).
 
 ## 5. Portfolio projects
 Each project has its own page at `/portfolio/<slug>` (cover, project facts, brief, approach, 4-image gallery with full-screen viewer, highlights, previous/next project).

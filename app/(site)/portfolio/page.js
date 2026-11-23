@@ -57,7 +57,7 @@ export default function PortfolioPage() {
                   </div>
                 </a>
                 <a href="/portfolio/commercial" className="pcat card-hover">
-                  <RImg src={IMG.office2} alt="Commercial interior projects" dir="down" />
+                  <RImg src={COMMERCIAL[0]?.cover || IMG.office2} alt="Commercial interior projects" dir="down" />
                   <div className="pcat-txt">
                     <span>{COMMERCIAL.length} Projects · Healthcare</span>
                     <h3 className="display h3">Commercial Projects</h3>

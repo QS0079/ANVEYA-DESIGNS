@@ -1,4 +1,4 @@
-// Creates the ANEYA database, tables, admin user and FAQs.
+// Creates the ANEYA database, tables and admin user.
 // Usage: npm run db:setup   (reads DB settings from .env.local)
 import fs from "node:fs";
 import path from "node:path";
@@ -37,6 +37,5 @@ if (has.email === "NO") await conn.query("ALTER TABLE leads MODIFY email VARCHAR
 const [[tbl]] = await conn.query("SELECT TABLE_COLLATION AS c FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'leads'");
 if (tbl && !String(tbl.c).startsWith("utf8mb4")) await conn.query("ALTER TABLE leads CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
-const [[{ c }]] = await conn.query(`SELECT COUNT(*) AS c FROM \`${DB}\`.faqs`);
-console.log(`✔ Database "${DB}" ready on ${process.env.DB_HOST || "127.0.0.1"}:${process.env.DB_PORT || 3306} — ${c} FAQs, admin user seeded.`);
+console.log(`✔ Database "${DB}" ready on ${process.env.DB_HOST || "127.0.0.1"}:${process.env.DB_PORT || 3306} — tables created, admin user seeded.`);
 await conn.end();

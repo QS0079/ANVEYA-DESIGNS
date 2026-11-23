@@ -20,7 +20,6 @@ const Icon = ({ n }) => (
 const LINKS = [
   { href: "/admin", label: "Dashboard", icon: "dash" },
   { href: "/admin/leads", label: "Leads", icon: "leads", badge: true },
-  { href: "/admin/faqs", label: "FAQs", icon: "faq" },
 ];
 
 export default function AdminShell({ user, children }) {

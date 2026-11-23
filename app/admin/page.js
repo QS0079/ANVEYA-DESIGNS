@@ -25,7 +25,7 @@ export default function Dashboard() {
             <div className="stat"><span>Total leads</span><b>{d.total}</b></div>
             <div className="stat" style={{ animationDelay: ".06s" }}><span>New / unread</span><b>{d.fresh}</b></div>
             <div className="stat" style={{ animationDelay: ".12s" }}><span>Last 7 days</span><b>{d.week}</b></div>
-            <div className="stat" style={{ animationDelay: ".18s" }}><span>Active FAQs</span><b>{d.faqs}</b></div>
+            <div className="stat" style={{ animationDelay: ".18s" }}><span>Last 30 days</span><b>{d.month}</b></div>
           </div>
           <div className="grid-2">
             <div className="panel">

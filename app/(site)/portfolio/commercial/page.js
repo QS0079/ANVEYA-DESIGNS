@@ -21,8 +21,8 @@ export default function CommercialListing() {
     <>
       <div className="hero-stack">
         <Hero
-          image={IMG.office1}
-          alt="Commercial interior by Anveya Designs"
+          image={COMMERCIAL[0]?.hero || IMG.office1}
+          alt="Clinic interior by Anveya Designs"
           eyebrow="Portfolio · Commercial"
           lines={["*F*unctional Commercial", "Spaces with a Distinct Identity."]}
           lineClass={["", "indent-1"]}
@@ -79,7 +79,7 @@ export default function CommercialListing() {
         lines={["Planning a *C*linic", "Interior?"]}
         text="Request a commercial design consultation — tell us about your clinic or workspace and how you'd like it to work."
         label="Request a Consultation"
-        image={IMG.office3}
+        image={COMMERCIAL[1]?.cover || IMG.office3}
       />
     </>
   );
