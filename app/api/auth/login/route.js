@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { query } from "@/lib/db";
-import { createSession, sessionCookieOptions, SESSION_COOKIE } from "@/lib/auth";
+import { createSession, cookieOptions, SESSION_COOKIE } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req) {
-  const { email = "", password = "", remember = false } = await req.json().catch(() => ({}));
+  const { email = "", password = "" } = await req.json().catch(() => ({}));
   const e = String(email).trim().toLowerCase();
   if (!e || !password) return NextResponse.json({ error: "Email and password are required." }, { status: 400 });
 
@@ -21,9 +21,8 @@ export async function POST(req) {
   const ok = user && (await bcrypt.compare(String(password), user.password_hash));
   if (!ok) return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
 
-  const keep = remember === true;
-  const token = await createSession(user, { remember: keep });
+  const token = await createSession(user);
   const res = NextResponse.json({ ok: true });
-  res.cookies.set(SESSION_COOKIE, token, sessionCookieOptions(keep));
+  res.cookies.set(SESSION_COOKIE, token, cookieOptions);
   return res;
 }

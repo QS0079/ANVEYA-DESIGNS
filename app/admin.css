@@ -287,3 +287,14 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
 .l2-remember input:focus-visible + .l2-box { box-shadow: 0 0 0 3px rgba(106,24,38,.18); }
 .l2-remember em { font-style: normal; color: #9a8676; font-size: 12.5px; }
 @media (max-width: 480px) { .l2-remember em { display: block; } .l2-remember span:last-child { line-height: 1.4; } }
+
+/* login — signed-out notice */
+.l2-note { background: #f4ead6; border-left: 3px solid #a8845f; color: #4a3428; font-size: 13px; line-height: 1.5; padding: 12px 14px; margin-bottom: 20px; }
+
+/* idle sign-out warning */
+.idle-warn { position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; padding: 20px; background: rgba(28,20,14,.45); backdrop-filter: blur(3px); animation: swapIn .3s var(--ease) both; }
+.idle-card { width: 100%; max-width: 400px; background: #fbf6ec; border-top: 3px solid #6a1826; padding: 28px; box-shadow: 0 30px 80px -30px rgba(0,0,0,.5); }
+.idle-card b { display: block; font-family: var(--f-display); font-weight: 400; font-size: 26px; color: #2b211b; margin-bottom: 10px; }
+.idle-card p { margin: 0 0 22px; font-size: 14px; line-height: 1.6; color: #5d4a3e; }
+.idle-card strong { color: #6a1826; }
+.idle-actions { display: flex; gap: 10px; flex-wrap: wrap; }

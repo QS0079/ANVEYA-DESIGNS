@@ -19,7 +19,11 @@ export default function LoginForm() {
   const [remember, setRemember] = useState(false);
 
   // pre-fill the email saved by "Remember me" (the password is never stored)
+  const [notice, setNotice] = useState("");
   useEffect(() => {
+    if (new URLSearchParams(location.search).get("reason") === "idle") {
+      setNotice("You were signed out after 10 minutes without activity. Please sign in again.");
+    }
     try {
       const saved = localStorage.getItem(SAVED_EMAIL);
       if (saved) { setEmail(saved); setRemember(true); }
@@ -34,7 +38,7 @@ export default function LoginForm() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, remember }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) { setErr(data.error || "Login failed."); setBusy(false); return; }
@@ -57,6 +61,7 @@ export default function LoginForm() {
       <h1>Sign in to your dashboard</h1>
       <p className="l2-lead">Use your admin email and password to manage website enquiries.</p>
 
+      {notice && !err && <div className="l2-note" role="status">{notice}</div>}
       {err && <div className="l2-err" role="alert">{err}</div>}
 
       <label className="l2-label" htmlFor="em">Email address</label>
@@ -75,7 +80,7 @@ export default function LoginForm() {
       <label className="l2-remember">
         <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
         <span className="l2-box" aria-hidden="true" />
-        <span>Remember me <em>— stay signed in for 30 days on this device</em></span>
+        <span>Remember me</span>
       </label>
 
       <button className="l2-btn" disabled={busy}>

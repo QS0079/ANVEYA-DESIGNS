@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -17,6 +17,62 @@ const Icon = ({ n }) => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{I[n]}</svg>
 );
 
+// ---- automatic sign-out after 10 minutes without activity ----
+const IDLE_MS = 10 * 60 * 1000;
+const WARN_MS = 60 * 1000; // warning shown during the last minute
+const PING_MS = 2 * 60 * 1000; // keep the server session alive while the admin is active
+const ACTIVE_KEY = "anveya_admin_active";
+
+function useIdleLogout() {
+  const [left, setLeft] = useState(null); // seconds left while the warning is shown
+  const lastPing = useRef(0);
+  const leaving = useRef(false);
+
+  const signOut = useCallback(async () => {
+    if (leaving.current) return;
+    leaving.current = true;
+    try { await fetch("/api/auth/logout", { method: "POST" }); } catch {}
+    location.href = "/login?reason=idle";
+  }, []);
+
+  const touch = useCallback(() => {
+    const now = Date.now();
+    try { localStorage.setItem(ACTIVE_KEY, String(now)); } catch {}
+    if (now - lastPing.current > PING_MS) {
+      lastPing.current = now;
+      fetch("/api/admin/ping", { cache: "no-store" }).then((r) => { if (r.status === 401) signOut(); }).catch(() => {});
+    }
+  }, [signOut]);
+
+  useEffect(() => {
+    lastPing.current = Date.now();
+    try { localStorage.setItem(ACTIVE_KEY, String(Date.now())); } catch {}
+    let throttle = 0;
+    const onActivity = () => {
+      const now = Date.now();
+      if (now - throttle < 5000) return;
+      throttle = now;
+      touch();
+    };
+    const evs = ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "wheel"];
+    evs.forEach((e) => window.addEventListener(e, onActivity, { passive: true }));
+
+    const tick = setInterval(() => {
+      let last = Date.now();
+      try { last = Number(localStorage.getItem(ACTIVE_KEY)) || last; } catch {} // shared across admin tabs
+      const idle = Date.now() - last;
+      if (idle >= IDLE_MS) signOut();
+      else if (idle >= IDLE_MS - WARN_MS) setLeft(Math.ceil((IDLE_MS - idle) / 1000));
+      else setLeft(null);
+    }, 1000);
+
+    return () => { evs.forEach((e) => window.removeEventListener(e, onActivity)); clearInterval(tick); };
+  }, [touch, signOut]);
+
+  const stay = () => { lastPing.current = 0; touch(); setLeft(null); };
+  return { left, stay, signOut };
+}
+
 const LINKS = [
   { href: "/admin", label: "Dashboard", icon: "dash" },
   { href: "/admin/leads", label: "Leads", icon: "leads", badge: true },
@@ -27,6 +83,7 @@ export default function AdminShell({ user, children }) {
   const [open, setOpen] = useState(false);
   const [fresh, setFresh] = useState(0);
   const [leaving, setLeaving] = useState(false);
+  const idle = useIdleLogout();
 
   useEffect(() => { setOpen(false); }, [pathname]);
   useEffect(() => {
@@ -90,6 +147,18 @@ export default function AdminShell({ user, children }) {
         </div>
       </aside>
       <main className="adm-main">{children}</main>
+      {idle.left != null && (
+        <div className="idle-warn" role="alertdialog" aria-live="assertive" aria-label="Session about to end">
+          <div className="idle-card">
+            <b>Still there?</b>
+            <p>For security, you'll be signed out in <strong>{idle.left}s</strong> because there's been no activity for a while.</p>
+            <div className="idle-actions">
+              <button className="abtn" onClick={idle.stay}>Stay signed in</button>
+              <button className="abtn ghost" onClick={idle.signOut}>Sign out now</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
