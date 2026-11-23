@@ -5,6 +5,7 @@ import { Lines, Sw, RImg, Up, Arrow } from "@/components/site/Lines";
 import { FaqSection, EnquirySection } from "@/components/site/Blocks";
 import { getPublicFaqs } from "@/lib/data";
 import { IMG } from "@/lib/defaults";
+import { PORTFOLIO, STATUS_LABEL, projectHref } from "@/lib/portfolio";
 
 export const dynamic = "force-dynamic";
 
@@ -30,13 +31,22 @@ const STEPS = [
   { t: "Final Review & Handover", d: "We review the completed work against the agreed design and requirements, focusing on the details that bring the space together." },
 ];
 
-const SLIDES = [
-  { tag: "Residential", title: "Residential Interior Design", text: "Discover homes designed around comfort, personal expression and everyday functionality. Explore living rooms, bedrooms, kitchens, dining areas and complete home interiors.", img: IMG.living1, img2: IMG.living3, caption: "Homes shaped around the way you live.", href: "/portfolio/residential-interior-design", cta: "View Project" },
-  { tag: "Commercial", title: "Commercial Interior Design", text: "Explore commercial spaces designed to support business requirements, improve functionality and create a memorable experience for visitors and employees.", img: IMG.office1, img2: IMG.office3, caption: "Workspaces built around your brand.", href: "/portfolio/commercial-interior-design", cta: "View Project" },
-  { tag: "Living Rooms", title: "Living Room Interiors", text: "Living spaces that bring together thoughtful furniture placement, lighting, textures and comfortable layouts.", img: IMG.living4, img2: IMG.living2, caption: "Light, texture and comfortable movement.", href: "/portfolio/living-room-interiors", cta: "View Project" },
-  { tag: "Bedrooms", title: "Bedroom Interiors", text: "Bedrooms designed as personal retreats with calming colour palettes, functional storage and considered details.", img: IMG.bedroom1, img2: IMG.bedroom3, caption: "Calm, personal retreats.", href: "/portfolio/bedroom-interiors", cta: "View Project" },
-  { tag: "Kitchens", title: "Kitchen Interiors", text: "Kitchens that combine practical layouts, efficient storage and visually appealing finishes.", img: IMG.kitchen1, img2: IMG.kitchen3, caption: "Practical layouts, refined finishes.", href: "/portfolio/kitchen-interiors", cta: "View Project" },
-];
+// Home portfolio slider — built from the real projects in lib/portfolio.js
+const SLIDES = PORTFOLIO.map((p) => {
+  const sections = p.rooms || p.zones || [];
+  const pics = sections.flatMap((r) => r.images).map((im) => im.src).filter((src) => src !== p.cover);
+  const cat = p.category === "residential" ? "Residential" : "Commercial";
+  return {
+    tag: `${cat} · ${p.status ? STATUS_LABEL[p.status] : "Healthcare"}`,
+    title: p.title,
+    text: p.concept,
+    img: p.cover,
+    img2: pics[0] || p.hero,
+    caption: p.location,
+    href: projectHref(p),
+    cta: "View Project",
+  };
+});
 
 export default async function Home() {
   const faqs = await getPublicFaqs();
@@ -100,14 +110,14 @@ export default async function Home() {
               <RImg src={IMG.living1} alt="Residential interior design" delay={150} />
               <h3 className="display h4">Residential Interior Design</h3>
               <p>We design homes that reflect your lifestyle, personal preferences and everyday routines. From living rooms and bedrooms to kitchens and complete home interiors, every detail is planned to create a comfortable and harmonious environment.</p>
-              <a href="/portfolio" className="link-arrow" style={{ marginTop: "auto" }}>View Spaces <span className="arr"><Arrow /></span></a>
+              <a href="/portfolio/residential" className="link-arrow" style={{ marginTop: "auto" }}>View Projects <span className="arr"><Arrow /></span></a>
             </Up>
             <Up className="svc card-hover" delay={260}>
               <div className="num">02</div>
               <RImg src={IMG.office1} alt="Commercial interior design" delay={320} />
               <h3 className="display h4">Commercial Interior Design</h3>
               <p>We create commercial interiors that bring together brand identity, functionality and visual appeal. From professional workspaces to customer-facing environments, our designs are developed around the needs of your business.</p>
-              <a href="/portfolio" className="link-arrow" style={{ marginTop: "auto" }}>View Spaces <span className="arr"><Arrow /></span></a>
+              <a href="/portfolio/commercial" className="link-arrow" style={{ marginTop: "auto" }}>View Projects <span className="arr"><Arrow /></span></a>
             </Up>
           </div>
         </div>
@@ -121,6 +131,9 @@ export default async function Home() {
             <Lines className="display h2" lines={["Spaces That Tell a *S*tory"]} />
           </div>
           <Slider items={SLIDES} />
+          <Up className="center mt-3" delay={150}>
+            <a href="/portfolio" className="btn">View All Projects <Arrow /></a>
+          </Up>
         </div>
       </section>
 

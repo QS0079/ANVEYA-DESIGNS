@@ -54,8 +54,8 @@ export default async function Footer() {
           <div className="ft-col">
             <h5>Services</h5>
             <ul>
-              <li><a href="/#services">Residential Interiors</a></li>
-              <li><a href="/#services">Commercial Interiors</a></li>
+              <li><a href="/portfolio/residential">Residential Interiors</a></li>
+              <li><a href="/portfolio/commercial">Commercial Interiors</a></li>
               <li><a href="/#process">Our Design Process</a></li>
               <li><a href="/#faqs">FAQs</a></li>
             </ul>
