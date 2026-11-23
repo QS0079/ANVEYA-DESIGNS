@@ -273,3 +273,6 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
   .tbl-wrap .tbl td.chk { position: absolute; top: 12px; right: 14px; width: auto; padding: 0 !important; }
   .tbl-wrap .tbl td:nth-child(2) { padding-right: 34px !important; padding-bottom: 8px !important; }
 }
+
+/* Admin content uses the full width of the screen */
+.adm-main { max-width: none; }
