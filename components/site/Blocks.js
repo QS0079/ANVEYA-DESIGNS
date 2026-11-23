@@ -24,6 +24,7 @@ export function CtaBand({ lines, text, primary, secondary, image = IMG.living4 }
 
 /** FAQ section (data from DB) */
 export function FaqSection({ faqs }) {
+  if (!faqs || faqs.length === 0) return null; // all FAQs removed/hidden in the admin panel → hide the section
   return (
     <section className="section bg-cream" id="faqs">
       <div className="wrap faq-grid">

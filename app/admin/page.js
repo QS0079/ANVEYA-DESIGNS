@@ -36,9 +36,9 @@ export default function Dashboard() {
                     {d.recent.map((r) => (
                       <tr key={r.id}>
                         <td><div className="nm">{r.name}</div><div className="sub">{r.phone}</div></td>
-                        <td className="sub">{r.property_type || "—"}</td>
-                        <td><span className={`pill ${r.status}`}>{label(r.status)}</span></td>
-                        <td className="sub" style={{ whiteSpace: "nowrap" }}>{fmtDate(r.created_at)}</td>
+                        <td className="sub" data-label="Property">{r.property_type || "—"}</td>
+                        <td data-label="Status"><span className={`pill ${r.status}`}>{label(r.status)}</span></td>
+                        <td className="sub" data-label="Received" style={{ whiteSpace: "nowrap" }}>{fmtDate(r.created_at)}</td>
                       </tr>
                     ))}
                   </tbody>

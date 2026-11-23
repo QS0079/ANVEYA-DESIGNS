@@ -14,6 +14,8 @@ export default function LeadsPage() {
   const [sel, setSel] = useState(null);
   const [notes, setNotes] = useState("");
   const [toast, setToast] = useState("");
+  const [picked, setPicked] = useState(() => new Set());
+  const [busy, setBusy] = useState(false);
   const per = 20;
 
   const flash = (m) => { setToast(m); setTimeout(() => setToast(""), 2200); };
@@ -24,6 +26,7 @@ export default function LeadsPage() {
     try {
       const d = await api(`/api/admin/leads?${p}`);
       setRows(d.rows); setTotal(d.total);
+      setPicked(new Set());
     } catch (e) { flash(e.message); }
     setLoading(false);
   }, [page, q, status, type]);
@@ -32,21 +35,44 @@ export default function LeadsPage() {
 
   const open = (r) => { setSel(r); setNotes(r.notes || ""); };
 
-  const update = async (body) => {
-    const d = await api(`/api/admin/leads/${sel.id}`, { method: "PATCH", body: JSON.stringify(body) });
-    setSel(d.row);
-    setRows((rs) => rs.map((r) => (r.id === d.row.id ? d.row : r)));
-    window.dispatchEvent(new Event("anveya:leads-changed"));
-    flash("Saved");
+  const patch = async (id, body, msg = "Saved") => {
+    try {
+      const d = await api(`/api/admin/leads/${id}`, { method: "PATCH", body: JSON.stringify(body) });
+      setRows((rs) => rs.map((r) => (r.id === d.row.id ? d.row : r)));
+      setSel((s) => (s && s.id === d.row.id ? d.row : s));
+      window.dispatchEvent(new Event("anveya:leads-changed"));
+      flash(msg);
+    } catch (e) { flash(e.message); }
   };
+  const update = (body) => patch(sel.id, body);
 
   const remove = async () => {
-    if (!confirm(`Delete the enquiry from ${sel.name}? This cannot be undone.`)) return;
-    await api(`/api/admin/leads/${sel.id}`, { method: "DELETE" });
-    setSel(null);
-    window.dispatchEvent(new Event("anveya:leads-changed"));
-    flash("Lead deleted");
-    load();
+    if (!confirm(`Permanently delete the enquiry from ${sel.name}?\n\nIt will be removed from the database and cannot be recovered.`)) return;
+    try {
+      await api(`/api/admin/leads/${sel.id}`, { method: "DELETE" });
+      setSel(null);
+      window.dispatchEvent(new Event("anveya:leads-changed"));
+      flash("Lead deleted");
+      load();
+    } catch (e) { flash(e.message); }
+  };
+
+  const toggle = (id) => setPicked((p) => { const n = new Set(p); n.has(id) ? n.delete(id) : n.add(id); return n; });
+  const allOnPage = rows.length > 0 && rows.every((r) => picked.has(r.id));
+  const toggleAll = () => setPicked(allOnPage ? new Set() : new Set(rows.map((r) => r.id)));
+
+  const bulkDelete = async () => {
+    const ids = [...picked];
+    if (!ids.length) return;
+    if (!confirm(`Permanently delete ${ids.length} selected lead${ids.length === 1 ? "" : "s"}?\n\nThey will be removed from the database and cannot be recovered.`)) return;
+    setBusy(true);
+    try {
+      const d = await api("/api/admin/leads", { method: "DELETE", body: JSON.stringify({ ids }) });
+      window.dispatchEvent(new Event("anveya:leads-changed"));
+      flash(`${d.deleted} lead${d.deleted === 1 ? "" : "s"} deleted`);
+      if (ids.length >= rows.length && page > 1) setPage(page - 1); else load();
+    } catch (e) { flash(e.message); }
+    setBusy(false);
   };
 
   const label = (v) => LEAD_STATUSES.find((s) => s.value === v)?.label || v;
@@ -72,20 +98,33 @@ export default function LeadsPage() {
         </select>
       </div>
 
+      {picked.size > 0 && (
+        <div className="bulkbar">
+          <span><b>{picked.size}</b> selected</span>
+          <button className="abtn ghost sm" onClick={() => setPicked(new Set())}>Clear</button>
+          <button className="abtn danger sm" onClick={bulkDelete} disabled={busy}>{busy ? "Deleting…" : `Delete selected (${picked.size})`}</button>
+        </div>
+      )}
+
       <div className="tbl-wrap">
         {!loading && rows.length === 0 ? <div className="empty">No leads found.</div> : (
           <table className="tbl">
-            <thead><tr><th>Name</th><th>Mobile</th><th>Property</th><th>Budget</th><th>Timeline</th><th>Status</th><th>Received</th></tr></thead>
+            <thead><tr><th className="chk"><input type="checkbox" aria-label="Select all leads on this page" checked={allOnPage} onChange={toggleAll} /></th><th>Name</th><th>Mobile</th><th>Property</th><th>Budget</th><th>Timeline</th><th>Status</th><th>Received</th></tr></thead>
             <tbody>
               {rows.map((r) => (
-                <tr key={r.id} className="click" onClick={() => open(r)}>
+                <tr key={r.id} className={`click ${picked.has(r.id) ? "picked" : ""}`} onClick={() => open(r)}>
+                  <td className="chk" onClick={(e) => e.stopPropagation()}><input type="checkbox" aria-label={`Select ${r.name}`} checked={picked.has(r.id)} onChange={() => toggle(r.id)} /></td>
                   <td><div className="nm">{r.name}</div><div className="sub">{r.location || "—"}</div></td>
-                  <td><div style={{ whiteSpace: "nowrap" }}>{r.phone}</div>{r.email && <div className="sub">{r.email}</div>}</td>
-                  <td><div>{r.property_type || "—"}</div>{r.service && <div className="sub">{r.service}</div>}</td>
-                  <td className="sub" style={{ whiteSpace: "nowrap" }}>{r.budget || "—"}</td>
-                  <td className="sub" style={{ whiteSpace: "nowrap" }}>{r.timeline || "—"}</td>
-                  <td><span className={`pill ${r.status}`}>{label(r.status)}</span></td>
-                  <td className="sub" style={{ whiteSpace: "nowrap" }}>{fmtDate(r.created_at)}</td>
+                  <td data-label="Mobile"><div style={{ whiteSpace: "nowrap" }}>{r.phone}</div>{r.email && <div className="sub">{r.email}</div>}</td>
+                  <td data-label="Property"><div>{r.property_type || "—"}</div>{r.service && <div className="sub">{r.service}</div>}</td>
+                  <td className="sub" data-label="Budget" style={{ whiteSpace: "nowrap" }}>{r.budget || "—"}</td>
+                  <td className="sub" data-label="Timeline" style={{ whiteSpace: "nowrap" }}>{r.timeline || "—"}</td>
+                  <td data-label="Status" onClick={(e) => e.stopPropagation()}>
+                    <select className={`stsel ${r.status}`} value={r.status} aria-label={`Status for ${r.name}`} onChange={(e) => patch(r.id, { status: e.target.value }, "Status updated")}>
+                      {LEAD_STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+                    </select>
+                  </td>
+                  <td className="sub" data-label="Received" style={{ whiteSpace: "nowrap" }}>{fmtDate(r.created_at)}</td>
                 </tr>
               ))}
             </tbody>
@@ -129,7 +168,7 @@ export default function LeadsPage() {
             <div style={{ marginTop: 20 }}>
               <div className="eyebrow" style={{ marginBottom: 8 }}>Internal notes</div>
               <textarea className="ta" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Call notes, follow-up date, site visit details…" />
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginTop: 10 }}>
                 <button className="abtn" onClick={() => update({ notes })}>Save notes</button>
                 <button className="abtn danger" onClick={remove}>Delete lead</button>
               </div>

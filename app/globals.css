@@ -1118,3 +1118,66 @@ p { margin: 0 0 1em; }
 @keyframes introSlideIn { to { transform: translateY(0); } }
 @keyframes introBar { to { transform: scaleX(1); } }
 html.intro-on, html.intro-on body { overflow: hidden; }
+
+/* ==========================================================
+   RESPONSIVE POLISH — tablet & mobile alignment
+   ========================================================== */
+/* Headings: when a designed line has to wrap, split it evenly instead of leaving one word alone */
+.display .ln-i, .display { text-wrap: balance; }
+.fitted .ln-i { text-wrap: nowrap; }
+
+/* Services: stack the intro above the cards on tablets so the cards get room */
+@media (max-width: 1100px) {
+  .services .grid { grid-template-columns: 1fr; gap: 48px; }
+  .services .grid > div:first-child { max-width: 640px; }
+  .services .note { margin-top: 32px; }
+  .services .cards .svc:nth-child(2) { margin-top: 56px; }
+}
+@media (max-width: 620px) { .services .cards .svc:nth-child(2) { margin-top: 0; } }
+
+/* Portfolio slider: drop the small side preview on tablets */
+@media (max-width: 1100px) and (min-width: 961px) {
+  .slider { grid-template-columns: 1.1fr 1fr; }
+  .slider .side { display: none; }
+}
+
+/* Project page: prev / next titles readable on every screen */
+.pnav-txt h3 { color: var(--paper); white-space: normal; font-size: clamp(20px, 2.4vw, 34px); line-height: 1.12; margin: 0; }
+@media (max-width: 700px) {
+  .pnav-item .rimg { aspect-ratio: 16 / 8; }
+  .pnav-item.next .pnav-txt { text-align: left; left: clamp(20px, 3vw, 48px); right: 20px; }
+}
+
+/* Project facts: last fact uses the full row on phones */
+@media (max-width: 600px) {
+  .pfacts { grid-template-columns: 1fr 1fr; }
+  .pfacts > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .pfacts > div:nth-child(even) { padding-left: 16px !important; border-left: 1px solid var(--line) !important; }
+}
+
+/* Large serif statements: calmer size on phones */
+@media (max-width: 600px) {
+  .statement { font-size: 20px; line-height: 1.4; }
+  .intro-lg { font-size: 19px; line-height: 1.5; }
+}
+
+/* Footer */
+@media (max-width: 860px) {
+  .ft-portfolio { grid-column: 1 / -1; }
+  .ft-portfolio ul { columns: 2; column-gap: 24px; }
+  .ft-portfolio li { break-inside: avoid; }
+}
+@media (max-width: 560px) {
+  .ft-grid, .ft-grid.has-social { grid-template-columns: 1fr 1fr; gap: 34px 20px; }
+  .ft-portfolio ul { columns: 1; }
+  .ft-reach { grid-column: 1 / -1; }
+  .ft-cta .btn-row { flex-direction: column; align-items: stretch; }
+  .ft-cta .btn-row .btn { justify-content: center; width: 100%; }
+}
+
+/* Long button labels on small phones */
+@media (max-width: 480px) {
+  .btn { letter-spacing: .12em; padding-left: 20px; padding-right: 20px; }
+  .cta-band .btn-row { flex-direction: column; align-items: center; }
+}
+@media (max-width: 560px) { .hero .btn-row .link-arrow { margin-left: 0 !important; align-self: flex-start !important; } }

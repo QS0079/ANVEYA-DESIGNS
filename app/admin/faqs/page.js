@@ -32,7 +32,7 @@ export default function FaqsPage() {
     flash(r.is_active ? "Hidden from website" : "Visible on website"); load();
   };
   const del = async (r) => {
-    if (!confirm("Delete this FAQ? This cannot be undone.")) return;
+    if (!confirm("Permanently delete this FAQ?\n\nIt will be removed from the database and from the website. To keep it but hide it from the website, use the on/off switch instead.")) return;
     await api(`/api/admin/faqs/${r.id}`, { method: "DELETE" });
     flash("FAQ deleted"); load();
   };

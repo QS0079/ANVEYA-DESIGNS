@@ -23,6 +23,7 @@ export async function PATCH(req, { params }) {
 
 export async function DELETE(_req, { params }) {
   const { id } = await params;
-  await query("DELETE FROM leads WHERE id = ?", [Number(id)]);
-  return NextResponse.json({ ok: true });
+  const res = await query("DELETE FROM leads WHERE id = ?", [Number(id)]);
+  if (!res.affectedRows) return NextResponse.json({ error: "Lead not found — it may already be deleted." }, { status: 404 });
+  return NextResponse.json({ ok: true, deleted: res.affectedRows });
 }

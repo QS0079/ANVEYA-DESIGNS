@@ -60,7 +60,7 @@ export default async function Footer() {
               <li><a href="/#faqs">FAQs</a></li>
             </ul>
           </div>
-          <div className="ft-col">
+          <div className="ft-col ft-portfolio">
             <h5>Portfolio</h5>
             <ul>
               {PROJECTS.map((p) => <li key={p.slug}><a href={`/portfolio/${p.slug}`}>{p.title}</a></li>)}

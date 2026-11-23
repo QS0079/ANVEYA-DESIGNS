@@ -29,3 +29,12 @@ export async function GET(req) {
   );
   return NextResponse.json({ rows, total: Number(total), page, per });
 }
+
+/** Bulk delete — permanently removes the given leads from the database. Body: { ids: number[] } */
+export async function DELETE(req) {
+  const body = await req.json().catch(() => ({}));
+  const ids = [...new Set((Array.isArray(body.ids) ? body.ids : []).map(Number).filter((n) => Number.isInteger(n) && n > 0))].slice(0, 1000);
+  if (!ids.length) return NextResponse.json({ error: "Select at least one lead." }, { status: 400 });
+  const res = await query(`DELETE FROM leads WHERE id IN (${ids.map(() => "?").join(",")})`, ids);
+  return NextResponse.json({ ok: true, deleted: res.affectedRows ?? 0 });
+}
