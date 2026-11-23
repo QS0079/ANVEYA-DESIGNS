@@ -213,3 +213,10 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
 .l2-bg { opacity: .72; }
 .l2-shade { background:
   linear-gradient(180deg, rgba(58,15,23,.35) 0%, rgba(106,24,38,.18) 35%, rgba(106,24,38,.22) 60%, rgba(58,15,23,.82) 100%); }
+
+/* login v2 — plain form, no card */
+.l2-card { background: transparent !important; border: 0 !important; box-shadow: none !important; backdrop-filter: none !important; padding: 0 !important; max-width: 420px; }
+.l2-side { background: var(--cream); }
+@media (max-width: 900px) {
+  .l2-side { background: var(--cream); padding: 40px 22px 28px; }
+}
