@@ -9,22 +9,48 @@ import { rich } from "./text";
 export default function Hero({ image, video, alt = "", eyebrow, lines, lineClass = [], copy, children, variant = "full", center = false }) {
   const ref = useRef(null);
   const vid = useRef(null);
-  // Background video: muted autoplay loop. Respects reduced-motion (shows the poster instead).
+  const bgSlot = useRef(null);
+  const frameSlot = useRef(null);
+  const blur = useRef(null);
+
+  // Background video. Landscape screens: full-bleed behind the text.
+  // Portrait screens (phones / tablets held upright): the same <video> node moves into a
+  // 16:9 frame so the whole shot is visible, and a soft blurred copy fills the backdrop.
   useEffect(() => {
     const v = vid.current;
     if (!v) return;
     v.muted = true; // React doesn't always render the muted attribute; iOS needs it to autoplay
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => {
-      if (mq.matches || document.hidden) v.pause();
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const portrait = window.matchMedia("(max-aspect-ratio: 1/1) and (max-width: 1024px)");
+    const play = () => {
+      if (reduce.matches || document.hidden) v.pause();
       else v.play().catch(() => {});
     };
-    sync();
-    mq.addEventListener?.("change", sync);
-    document.addEventListener("visibilitychange", sync);
+    const place = () => {
+      const slot = portrait.matches ? frameSlot.current : bgSlot.current;
+      if (slot && v.parentNode !== slot) slot.appendChild(v);
+      ref.current?.classList.toggle("vid-portrait", portrait.matches);
+      play();
+    };
+    // blurred live backdrop (portrait only): tiny canvas, scaled up + blurred by CSS
+    let raf = 0;
+    const c = blur.current;
+    const ctx = c?.getContext("2d");
+    const draw = () => {
+      raf = requestAnimationFrame(draw);
+      if (!ctx || !portrait.matches || v.readyState < 2) return;
+      ctx.drawImage(v, 0, 0, c.width, c.height);
+    };
+    place();
+    raf = requestAnimationFrame(draw);
+    portrait.addEventListener?.("change", place);
+    reduce.addEventListener?.("change", play);
+    document.addEventListener("visibilitychange", play);
     return () => {
-      mq.removeEventListener?.("change", sync);
-      document.removeEventListener("visibilitychange", sync);
+      cancelAnimationFrame(raf);
+      portrait.removeEventListener?.("change", place);
+      reduce.removeEventListener?.("change", play);
+      document.removeEventListener("visibilitychange", play);
     };
   }, []);
   const onMove = (e) => {
@@ -35,23 +61,26 @@ export default function Hero({ image, video, alt = "", eyebrow, lines, lineClass
   const cls = variant === "short" ? "short" : variant === "mini" ? "mini" : "";
   return (
     <section ref={ref} className={`hero ${cls} ${video ? "has-video" : ""}`} onMouseMove={onMove} id="top">
-      <div className="bg">
+      <div className="bg" ref={bgSlot}>
         {video ? (
-          <video
-            ref={vid}
-            className="hero-video"
-            poster={video.poster}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            disablePictureInPicture
-            aria-label={alt}
-          >
-            {video.mobile && <source src={video.mobile} type="video/mp4" media="(max-width: 820px)" />}
-            <source src={video.src} type="video/mp4" />
-          </video>
+          <>
+            <canvas ref={blur} className="hero-blur" width="48" height="27" aria-hidden="true" />
+            <video
+              ref={vid}
+              className="hero-video"
+              poster={video.poster}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              disablePictureInPicture
+              aria-label={alt}
+            >
+              {video.mobile && <source src={video.mobile} type="video/mp4" media="(max-width: 600px)" />}
+              <source src={video.src} type="video/mp4" />
+            </video>
+          </>
         ) : (
           <img src={image} alt={alt} fetchPriority="high" />
         )}
@@ -70,6 +99,9 @@ export default function Hero({ image, video, alt = "", eyebrow, lines, lineClass
               </span>
             ))}
           </h1>
+          {video && (
+            <div className="hero-frame hf" style={{ "--i": -1, backgroundImage: `url(${video.poster})` }} ref={frameSlot} />
+          )}
           {center && copy && <p className="lead hf" style={{ "--i": 0 }}>{copy}</p>}
           {!center && (copy || children) && (
             <div className="hero-foot">
