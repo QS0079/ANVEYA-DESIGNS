@@ -1,64 +1,118 @@
 import Hero from "@/components/site/Hero";
-import { Lines, Sw, RImg, Up, Arrow, Statement } from "@/components/site/Lines";
-import { CtaBand } from "@/components/site/Blocks";
+import { Lines, RImg, Up, Arrow } from "@/components/site/Lines";
+import ProjectCard from "@/components/site/ProjectCard";
+import PortfolioGrid from "@/components/site/PortfolioGrid";
+import { ApproachStrip, EnquiryCta } from "@/components/site/PortfolioBlocks";
 import { IMG } from "@/lib/defaults";
 import { PROJECTS } from "@/lib/projects";
+import { PORTFOLIO, RESIDENTIAL, COMMERCIAL } from "@/lib/portfolio";
 
 export const metadata = {
-  title: "Interior Design Portfolio | Residential & Commercial Projects",
+  title: "Interior Design Portfolio | Residential & Commercial Projects in Pune",
   description:
-    "Explore Anveya Designs' residential and commercial interior design portfolio featuring thoughtfully planned and beautifully designed spaces.",
+    "Explore Anveya Designs' residential and commercial interior design projects across Pune — completed homes, ongoing projects and healthcare interiors.",
   alternates: { canonical: "/portfolio" },
 };
 
-const CATS = PROJECTS.map((p) => ({ t: p.title, d: p.summary, img: p.cover, href: `/portfolio/${p.slug}` }));
+// Example category pages (kept as design-inspiration examples)
+const EXAMPLES = PROJECTS.map((p) => ({ t: p.title, d: p.summary, img: p.cover, href: `/portfolio/${p.slug}` }));
 
 export default function PortfolioPage() {
+  const featured = PORTFOLIO.filter((p) => p.featured).slice(0, 4);
+  const done = RESIDENTIAL.filter((p) => p.status === "completed").length;
+  const ongoing = RESIDENTIAL.filter((p) => p.status === "ongoing").length;
+
   return (
     <>
+      {/* 01 — Hero */}
       <div className="hero-stack">
         <Hero
           image={IMG.heroPortfolio}
-          alt="Portfolio of Anveya Designs"
+          alt="Interior designed by Anveya Designs"
           eyebrow="Our Portfolio"
-          lines={["*S*paces That", "Tell a Story"]}
+          lines={["*S*paces Designed", "Around Life."]}
           lineClass={["", "indent-2"]}
           variant="short"
-          copy={[
-            "Every space begins with an idea, and every project brings that idea to life in its own way.",
-            "Explore the Anveya Designs portfolio to discover our approach to residential and commercial interior design. From thoughtfully designed homes to functional commercial environments, each project reflects creativity, careful planning and attention to detail.",
-          ]}
+          copy={["Homes and workplaces across Pune, each designed around the people who use them — explore completed projects, work in progress and commercial interiors."]}
         >
-          <a href="/contact-us#enquiry" className="btn light">Discuss Your Project <Arrow /></a>
+          <a href="#all-projects" className="btn light">Explore Projects <Arrow /></a>
         </Hero>
 
+        {/* 02 — Project category selector */}
         <div className="over">
           <section className="section bg-cream">
             <div className="wrap">
-              <div className="center">
-                <Up className="eyebrow" style={{ justifyContent: "center" }}>Portfolio</Up>
-                <Lines className="display h2" lines={["Explore Our Interior", "*D*esign Projects"]} />
+              <div className="center" style={{ marginBottom: "clamp(34px, 5vw, 64px)" }}>
+                <Up className="eyebrow" style={{ justifyContent: "center" }}>Browse by Category</Up>
+                <Lines className="display h2" lines={["Residential &", "*C*ommercial Projects"]} />
               </div>
-              <div className="mt-3">
-                <Statement text="We believe every project deserves an individual design approach. Our portfolio showcases spaces designed around different lifestyles, functional requirements and aesthetic preferences." />
+              <div className="pcats">
+                <a href="/portfolio/residential" className="pcat card-hover">
+                  <RImg src={IMG.living2} alt="Residential interior projects" />
+                  <div className="pcat-txt">
+                    <span>{RESIDENTIAL.length} Projects · {done} Completed · {ongoing} Ongoing</span>
+                    <h3 className="display h3">Residential Projects</h3>
+                    <p>Homes designed for everyday living — from complete apartments to work in progress.</p>
+                    <span className="link-arrow">View Residential <span className="arr"><Arrow /></span></span>
+                  </div>
+                </a>
+                <a href="/portfolio/commercial" className="pcat card-hover">
+                  <RImg src={IMG.office2} alt="Commercial interior projects" dir="down" />
+                  <div className="pcat-txt">
+                    <span>{COMMERCIAL.length} Projects · Healthcare</span>
+                    <h3 className="display h3">Commercial Projects</h3>
+                    <p>Functional commercial spaces with a distinct identity, including clinic interiors.</p>
+                    <span className="link-arrow">View Commercial <span className="arr"><Arrow /></span></span>
+                  </div>
+                </a>
               </div>
-              <Up as="p" className="lead mx-auto center mt-3" delay={100}>Discover how thoughtful layouts, carefully selected materials, colours, textures and design elements come together to create distinctive interiors.</Up>
             </div>
           </section>
         </div>
       </div>
 
-      <section className="section bg-cream" style={{ paddingTop: 0 }} id="categories">
+      {/* 03 — Featured projects */}
+      <section className="section bg-cream" style={{ paddingTop: 0 }}>
+        <div className="wrap">
+          <div className="two-col-head" style={{ marginBottom: "clamp(30px, 4vw, 60px)" }}>
+            <div>
+              <Up className="eyebrow">Featured Projects</Up>
+              <Lines className="display h2" lines={["Selected *W*ork"]} />
+            </div>
+            <Up as="p" className="lead" delay={150}>A closer look at a few projects — the people they were designed for, the challenges they solved and the details that bring them together.</Up>
+          </div>
+          <div className="pfeat">
+            {featured.map((p, i) => <ProjectCard key={p.slug} p={p} size={i === 0 ? "lg" : ""} dir={i % 2 ? "down" : undefined} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* 04 — All projects grid (filterable) */}
+      <section className="section bg-cream2" id="all-projects">
+        <div className="wrap">
+          <div className="two-col-head" style={{ marginBottom: "clamp(26px, 3vw, 44px)" }}>
+            <div>
+              <Up className="eyebrow">All Projects</Up>
+              <Lines className="display h2" lines={["Every *P*roject"]} />
+            </div>
+            <Up as="p" className="lead" delay={150}>Filter by residential or commercial work, or by project status.</Up>
+          </div>
+          <PortfolioGrid projects={PORTFOLIO} />
+        </div>
+      </section>
+
+      {/* Design inspiration — example spaces (kept from the original portfolio) */}
+      <section className="section bg-cream" id="categories">
         <div className="wrap">
           <div className="two-col-head" style={{ marginBottom: "clamp(40px, 6vw, 90px)" }}>
             <div>
-              <Up className="eyebrow">Portfolio Categories</Up>
-              <Lines className="display h2" lines={["Explore Projects", "by *S*pace"]} />
+              <Up className="eyebrow">Design Inspiration</Up>
+              <Lines className="display h2" lines={["Explore Ideas", "by *S*pace"]} />
             </div>
-            <Up as="p" className="lead" delay={150}>From complete homes to individual rooms and working environments — every category reflects a different set of needs, and a design response made for them.</Up>
+            <Up as="p" className="lead" delay={150}>Example spaces that show how we think about living rooms, bedrooms, kitchens and workplaces.</Up>
           </div>
           <div className="cats">
-            {CATS.map((c, i) => (
+            {EXAMPLES.map((c, i) => (
               <a href={c.href} className="cat card-hover" key={c.t}>
                 <RImg src={c.img} alt={c.t} dir={i % 2 ? "down" : undefined} />
                 <Up className="cap" delay={150}>
@@ -75,10 +129,13 @@ export default function PortfolioPage() {
         </div>
       </section>
 
-      <CtaBand
-        lines={["Inspired by", "What You *S*ee?"]}
-        text="Your space could be our next design story. Let's discuss your ideas, understand your requirements and explore how we can create something meaningful together."
-        primary={{ href: "/contact-us#enquiry", label: "Start Your Interior Design Journey" }}
+      {/* 05 — Our approach */}
+      <ApproachStrip />
+
+      {/* 06 — Consultation CTA */}
+      <EnquiryCta
+        lines={["Have a *S*pace", "in Mind?"]}
+        text="Tell us about your home or commercial space. We'll understand your requirements and talk you through how we can help."
         image={IMG.bedroom2}
       />
     </>

@@ -1,5 +1,5 @@
 import { getSettings } from "@/lib/data";
-import { PROJECTS } from "@/lib/projects";
+import { PORTFOLIO, projectHref } from "@/lib/portfolio";
 import { Lines, Up, Arrow } from "./Lines";
 import Logo from "./Logo";
 
@@ -63,7 +63,7 @@ export default async function Footer() {
           <div className="ft-col ft-portfolio">
             <h5>Portfolio</h5>
             <ul>
-              {PROJECTS.map((p) => <li key={p.slug}><a href={`/portfolio/${p.slug}`}>{p.title}</a></li>)}
+              {PORTFOLIO.map((p) => <li key={p.slug}><a href={projectHref(p)}>{p.title}</a></li>)}
             </ul>
           </div>
           <div className="ft-col ft-reach">
