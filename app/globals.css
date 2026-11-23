@@ -1471,3 +1471,11 @@ html:has(.header.hide) .roomnav { top: 0; }
   .hero.has-video .inner { height: auto; min-height: inherit; justify-content: center; padding-top: calc(var(--header-h) + 28px); padding-bottom: 48px; }
 }
 @media (prefers-reduced-motion: reduce) { .hero .bg video { transition: none; transform: none; } }
+
+/* Header while scrolling over the hero: dark glass bar so hero content slides underneath, not through it */
+.header { transition: transform .6s var(--ease), background-color .45s var(--ease), color .45s var(--ease), box-shadow .45s var(--ease); }
+.header.tint { background: rgba(26, 18, 13, .82); backdrop-filter: blur(14px) saturate(1.1); -webkit-backdrop-filter: blur(14px) saturate(1.1); box-shadow: 0 10px 30px rgba(10, 6, 4, .22); }
+.header.tint .line { opacity: 0; }
+.header.tint .bar { height: 78px; }
+.header.tint .brand { height: 60px; }
+@media (max-width: 960px) { .header.tint .bar { height: 70px; } .header.tint .brand { height: 54px; } }

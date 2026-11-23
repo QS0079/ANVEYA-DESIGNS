@@ -8,6 +8,7 @@ import Logo from "./Logo";
 export default function Header() {
   const pathname = usePathname();
   const [solid, setSolid] = useState(false);
+  const [tint, setTint] = useState(false);
   const [hide, setHide] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -18,6 +19,8 @@ export default function Header() {
       const hero = document.querySelector(".hero");
       const limit = hero ? hero.offsetHeight - 90 : 40;
       setSolid(y > limit);
+      // while still over the dark hero, give the bar its own dark glass so content never shows through it
+      setTint(y > 8 && y <= limit);
       setHide(y > limit + 200 && y > last + 2);
       if (y < last - 2) setHide(false);
       last = y;
@@ -42,7 +45,7 @@ export default function Header() {
 
   return (
     <>
-      <header className={`header ${solid && !open ? "solid" : ""} ${hide && !open ? "hide" : ""}`}>
+      <header className={`header ${solid && !open ? "solid" : ""} ${tint && !open ? "tint" : ""} ${hide && !open ? "hide" : ""}`}>
         <div className="wrap">
           <div className="bar">
             <a href="/" className="brand fade-item" style={{ "--i": 0 }} aria-label="Anveya Designs — Home">
