@@ -1,13 +1,32 @@
 "use client";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { rich } from "./text";
 
 /**
  * Full-bleed sticky hero. The next <section class="over"> slides over it while it dims.
  * lines: array of nodes (each line masks & rises on page load), lineClass: indent classes per line.
  */
-export default function Hero({ image, alt = "", eyebrow, lines, lineClass = [], copy, children, variant = "full", center = false }) {
+export default function Hero({ image, video, alt = "", eyebrow, lines, lineClass = [], copy, children, variant = "full", center = false }) {
   const ref = useRef(null);
+  const vid = useRef(null);
+  // Background video: muted autoplay loop. Respects reduced-motion (shows the poster instead).
+  useEffect(() => {
+    const v = vid.current;
+    if (!v) return;
+    v.muted = true; // React doesn't always render the muted attribute; iOS needs it to autoplay
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => {
+      if (mq.matches || document.hidden) v.pause();
+      else v.play().catch(() => {});
+    };
+    sync();
+    mq.addEventListener?.("change", sync);
+    document.addEventListener("visibilitychange", sync);
+    return () => {
+      mq.removeEventListener?.("change", sync);
+      document.removeEventListener("visibilitychange", sync);
+    };
+  }, []);
   const onMove = (e) => {
     const r = ref.current.getBoundingClientRect();
     ref.current.style.setProperty("--mx", `${e.clientX - r.left}px`);
@@ -15,8 +34,28 @@ export default function Hero({ image, alt = "", eyebrow, lines, lineClass = [], 
   };
   const cls = variant === "short" ? "short" : variant === "mini" ? "mini" : "";
   return (
-    <section ref={ref} className={`hero ${cls}`} onMouseMove={onMove} id="top">
-      <div className="bg"><img src={image} alt={alt} fetchPriority="high" /></div>
+    <section ref={ref} className={`hero ${cls} ${video ? "has-video" : ""}`} onMouseMove={onMove} id="top">
+      <div className="bg">
+        {video ? (
+          <video
+            ref={vid}
+            className="hero-video"
+            poster={video.poster}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            disablePictureInPicture
+            aria-label={alt}
+          >
+            {video.mobile && <source src={video.mobile} type="video/mp4" media="(max-width: 820px)" />}
+            <source src={video.src} type="video/mp4" />
+          </video>
+        ) : (
+          <img src={image} alt={alt} fetchPriority="high" />
+        )}
+      </div>
       <div className="shade" />
       <div className="glow" />
       <div className="glow dot" />

@@ -55,7 +55,8 @@ export default async function Home() {
       <div className="hero-stack">
         <Hero
           image={IMG.hero}
-          alt="Contemporary living room designed by Anveya Designs"
+          video={{ src: "/media/hero.mp4", mobile: "/media/hero-720.mp4", poster: "/media/hero-poster.jpg" }}
+          alt="Walkthrough of a contemporary home interior: living room, kitchen, bedroom and bathroom"
           eyebrow="Residential & Commercial Interior Design"
           lines={["Thoughtfully", "*D*esigned Interiors", "for the Way You", "*L*ive and Work."]}
           lineClass={["", "indent-1", "indent-2", "indent-3"]}
