@@ -13,8 +13,8 @@ export default function Intro() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.__lenis?.stop();
     document.documentElement.classList.add("intro-on");
-    const hold = reduce ? 300 : 1700;   // logo slides in + holds
-    const leave = reduce ? 200 : 1100;  // layer slides up
+    const hold = reduce ? 250 : 1050;   // logo slides in + holds
+    const leave = reduce ? 200 : 800;  // layer slides up
     const t1 = setTimeout(() => setPhase("out"), hold);
     const t2 = setTimeout(() => {
       window.__introDone = true;
@@ -32,7 +32,7 @@ export default function Intro() {
   return (
     <div className={`intro ${phase === "out" ? "out" : ""}`} aria-hidden="true">
       <div className="intro-mask">
-        <img src="/brand/logo-light.png" alt="" width="800" height="745" className="intro-logo" fetchPriority="high" />
+        <img src="/brand/logo-light-400.webp" alt="" width="430" height="400" className="intro-logo" fetchPriority="high" decoding="sync" />
       </div>
       <div className="intro-bar" />
     </div>

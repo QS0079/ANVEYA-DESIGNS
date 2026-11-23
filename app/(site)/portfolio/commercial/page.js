@@ -27,7 +27,7 @@ export default function CommercialListing() {
           lines={["*F*unctional Commercial", "Spaces with a Distinct Identity."]}
           lineClass={["", "indent-1"]}
           variant="short"
-          copy={["Workplaces and clinics designed around the people who use them — clear journeys, practical details and a confident identity."]}
+          copy={["Workplaces and clinics designed around the people who use them, with clear journeys, practical details and a confident identity."]}
         >
           <a href="#projects" className="btn light">View Projects <Arrow /></a>
         </Hero>

@@ -33,7 +33,7 @@ export default function PortfolioPage() {
           lines={["*S*paces Designed", "Around Life."]}
           lineClass={["", "indent-2"]}
           variant="short"
-          copy={["Homes and workplaces across Pune, each designed around the people who use them — explore completed projects, work in progress and commercial interiors."]}
+          copy={["Homes and workplaces across Pune, each designed around the people who use them. Explore completed projects, work in progress and commercial interiors."]}
         >
           <a href="#all-projects" className="btn light">Explore Projects <Arrow /></a>
         </Hero>
