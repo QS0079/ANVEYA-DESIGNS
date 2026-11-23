@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+const SAVED_EMAIL = "anveya_admin_email";
 
 const MailIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3.5 6.5 8.5 6 8.5-6" /></svg>
@@ -14,6 +16,15 @@ export default function LoginForm() {
   const [show, setShow] = useState(false);
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
+  const [remember, setRemember] = useState(false);
+
+  // pre-fill the email saved by "Remember me" (the password is never stored)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(SAVED_EMAIL);
+      if (saved) { setEmail(saved); setRemember(true); }
+    } catch {}
+  }, []);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -23,10 +34,14 @@ export default function LoginForm() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, remember }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) { setErr(data.error || "Login failed."); setBusy(false); return; }
+      try {
+        if (remember) localStorage.setItem(SAVED_EMAIL, email.trim());
+        else localStorage.removeItem(SAVED_EMAIL);
+      } catch {}
       const next = new URLSearchParams(location.search).get("next");
       location.href = next && next.startsWith("/admin") ? next : "/admin";
     } catch {
@@ -40,7 +55,7 @@ export default function LoginForm() {
       <img src="/brand/logo-dark.png" alt="Anveya Designs" className="l2-card-logo" width="800" height="745" />
       <div className="l2-kicker"><span />Welcome back</div>
       <h1>Sign in to your dashboard</h1>
-      <p className="l2-lead">Use your admin email and password to manage enquiries and FAQs.</p>
+      <p className="l2-lead">Use your admin email and password to manage website enquiries.</p>
 
       {err && <div className="l2-err" role="alert">{err}</div>}
 
@@ -56,6 +71,12 @@ export default function LoginForm() {
         <input id="pw" type={show ? "text" : "password"} placeholder="Enter your password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         <button type="button" className="l2-show" onClick={() => setShow((s) => !s)} aria-label={show ? "Hide password" : "Show password"}>{show ? "Hide" : "Show"}</button>
       </div>
+
+      <label className="l2-remember">
+        <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
+        <span className="l2-box" aria-hidden="true" />
+        <span>Remember me <em>— stay signed in for 30 days on this device</em></span>
+      </label>
 
       <button className="l2-btn" disabled={busy}>
         {busy ? "Signing in…" : "Sign in"}

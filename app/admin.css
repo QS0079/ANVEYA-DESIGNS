@@ -276,3 +276,14 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
 
 /* Admin content uses the full width of the screen */
 .adm-main { max-width: none; }
+
+/* login — remember me */
+.l2-remember { position: relative; display: flex; align-items: center; gap: 12px; margin: -4px 0 22px; font-size: 13.5px; color: #4a3428; cursor: pointer; user-select: none; }
+.l2-remember input { position: absolute; opacity: 0; width: 18px; height: 18px; margin: 0; cursor: pointer; }
+.l2-box { flex: none; width: 18px; height: 18px; border: 1px solid rgba(74,52,40,.35); border-radius: 3px; background: #fff; display: grid; place-items: center; transition: background .2s, border-color .2s; }
+.l2-box::after { content: ""; width: 9px; height: 5px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translate(1px, -1px); opacity: 0; transition: opacity .2s; }
+.l2-remember input:checked + .l2-box { background: #6a1826; border-color: #6a1826; }
+.l2-remember input:checked + .l2-box::after { opacity: 1; }
+.l2-remember input:focus-visible + .l2-box { box-shadow: 0 0 0 3px rgba(106,24,38,.18); }
+.l2-remember em { font-style: normal; color: #9a8676; font-size: 12.5px; }
+@media (max-width: 480px) { .l2-remember em { display: block; } .l2-remember span:last-child { line-height: 1.4; } }
