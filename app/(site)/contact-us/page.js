@@ -2,7 +2,8 @@ import Hero from "@/components/site/Hero";
 import { Lines, Sw, Up, Arrow } from "@/components/site/Lines";
 import { CtaBand, EnquirySection } from "@/components/site/Blocks";
 import { getSettings } from "@/lib/data";
-import { IMG } from "@/lib/defaults";
+import { IMG, socialLinks } from "@/lib/defaults";
+import Social from "@/components/site/Social";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,7 @@ export default async function ContactPage() {
     ["Email", s.email && <a href={`mailto:${s.email}`} data-native>{s.email}</a>],
     ["Phone", s.phone && <a href={`tel:${s.phone.replace(/[^\d+]/g, "")}`} data-native>{s.phone}</a>],
     ["Studio", s.address && <span style={{ whiteSpace: "pre-line" }}>{s.address}</span>],
+    ["Follow", socialLinks(s).length > 0 && <Social contact={s} labels className="social-contact" />],
   ].filter(([, v]) => v);
 
   return (

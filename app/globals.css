@@ -1428,3 +1428,16 @@ html:has(.header.hide) .roomnav { top: 0; }
 .dstrip .rimg { aspect-ratio: 4 / 3; }
 .room-pics.n2 figure .rimg { aspect-ratio: 4 / 5; }
 @media (max-width: 600px) { .dstrip { grid-template-columns: 1fr 1fr; } .dstrip .rimg { aspect-ratio: 4 / 5; } }
+
+/* ---------- social icons ---------- */
+.social { display: flex; flex-wrap: wrap; gap: 10px; }
+.social a { display: inline-flex; align-items: center; gap: 10px; color: inherit; }
+.social-ic { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); color: var(--brown); transition: background .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease), transform .35s var(--ease); }
+.social a:hover .social-ic { background: var(--burgundy); border-color: var(--burgundy); color: var(--paper); transform: translateY(-2px); }
+.social-lb { font-size: 14px; }
+.ft-social { margin-top: 22px; font-size: inherit; letter-spacing: normal; text-transform: none; }
+.social.social-contact { flex-direction: column !important; align-items: flex-start; gap: 10px; }
+.social-contact a:hover .social-lb { color: var(--burgundy); }
+.mm-social { margin-top: 26px; }
+.mm-social .social-ic { border-color: rgba(249,243,232,.3); color: var(--paper); }
+.mm-social a:hover .social-ic { background: var(--gold); border-color: var(--gold); color: var(--espresso); }

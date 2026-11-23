@@ -1,4 +1,5 @@
 "use client";
+import Social from "./Social";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { NAV } from "@/lib/defaults";
@@ -73,6 +74,7 @@ export default function Header() {
           </span>
         ))}
         <div className="meta">Residential &amp; Commercial Interior Design</div>
+        <Social className="mm-social" />
       </div>
     </>
   );

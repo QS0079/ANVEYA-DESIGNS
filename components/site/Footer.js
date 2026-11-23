@@ -2,6 +2,7 @@ import { getSettings } from "@/lib/data";
 import { PORTFOLIO, projectHref } from "@/lib/portfolio";
 import { Lines, Up, Arrow } from "./Lines";
 import Logo from "./Logo";
+import Social from "./Social";
 
 const Icon = ({ d }) => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{d}</svg>
@@ -11,9 +12,6 @@ export default async function Footer() {
   const s = await getSettings();
   const tel = s.phone ? s.phone.replace(/[^\d+]/g, "") : "";
   const mapUrl = s.address ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.address.replace(/\n/g, " "))}` : "";
-  const socials = [
-    ["Instagram", s.instagram], ["Facebook", s.facebook], ["LinkedIn", s.linkedin], ["Pinterest", s.pinterest],
-  ].filter(([, u]) => u);
 
   return (
     <footer className="ft">
@@ -38,9 +36,7 @@ export default async function Footer() {
           <div className="ft-col ft-studio">
             <a href="/" aria-label="Anveya Designs — Home"><Logo variant="dark" className="ft-logo" height={120} /></a>
             <p>Thoughtfully designed residential and commercial interiors that bring together aesthetics, functionality and attention to detail.</p>
-            {socials.length > 0 && (
-              <div className="ft-social">{socials.map(([n, u]) => <a key={n} href={u} target="_blank" rel="noopener noreferrer">{n}</a>)}</div>
-            )}
+            <Social contact={s} className="ft-social" />
           </div>
           <div className="ft-col">
             <h5>Explore</h5>
