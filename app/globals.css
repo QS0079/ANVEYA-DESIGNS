@@ -1410,3 +1410,15 @@ html.intro-on, html.intro-on body { overflow: hidden; }
 .roomnav { top: 78px; transition: top .5s var(--ease); }
 @media (max-width: 960px) { .roomnav { top: 70px; } }
 html:has(.header.hide) .roomnav { top: 0; }
+
+/* Featured: the large card stretches to the full height of the two cards beside it (no empty gap) */
+.pfeat { align-items: stretch; }
+.pfeat .pcard.lg { height: 100%; }
+.pfeat .pcard.lg .pcard-media { flex: 1; display: flex; min-height: 0; }
+.pfeat .pcard.lg .pcard-media .rimg { aspect-ratio: auto; flex: 1; height: auto; min-height: 420px; }
+.pfeat .pcard.lg .pcard-body { flex: none; }
+@media (max-width: 860px) {
+  .pfeat .pcard.lg .pcard-media { display: block; }
+  .pfeat .pcard.lg .pcard-media .rimg { aspect-ratio: 16 / 11; min-height: 0; }
+}
+@media (min-width: 861px) { .pfeat .pcard:not(.lg) .rimg { aspect-ratio: 16 / 10; } }
