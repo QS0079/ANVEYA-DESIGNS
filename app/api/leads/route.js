@@ -20,10 +20,14 @@ export async function POST(req) {
   // Honeypot field — bots fill it, humans never see it
   if (clean(body.website)) return NextResponse.json({ ok: true });
 
-  const ip = (req.headers.get("x-forwarded-for") || "local").split(",")[0].trim();
+  // Behind Hostinger's CDN the visitor IP comes in a forwarded header. If none is present we skip the
+  // limit rather than lumping every visitor into one shared bucket (which would block real enquiries).
+  const ip = (req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || req.headers.get("cf-connecting-ip") || "")
+    .split(",")[0]
+    .trim();
   const now = Date.now();
-  const list = (hits.get(ip) || []).filter((t) => now - t < 10 * 60 * 1000);
-  if (list.length >= 5) {
+  const list = ip ? (hits.get(ip) || []).filter((t) => now - t < 10 * 60 * 1000) : [];
+  if (ip && list.length >= 10) {
     return NextResponse.json({ error: "Too many requests. Please try again in a few minutes." }, { status: 429 });
   }
 
@@ -60,7 +64,9 @@ export async function POST(req) {
     return NextResponse.json({ error: "We couldn't send your enquiry right now. Please try again shortly." }, { status: 500 });
   }
 
-  list.push(now);
-  hits.set(ip, list);
+  if (ip) {
+    list.push(now);
+    hits.set(ip, list);
+  }
   return NextResponse.json({ ok: true });
 }

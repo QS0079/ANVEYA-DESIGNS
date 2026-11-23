@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS faqs (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Admin login: admin@anveya.com / Admin@anveya.com
-INSERT IGNORE INTO admin_users (name, email, password_hash) VALUES ('Admin', 'admin@anveya.com', '$2a$10$uGattOmFXz56tqU6r9Kl9uZGZ3rByHB0Uxf0eSuUsV59aGyXSe0tC');
+-- Admin login: admin@anveya.com / Admin@anveya
+INSERT IGNORE INTO admin_users (name, email, password_hash) VALUES ('Admin', 'admin@anveya.com', '$2a$10$QQttNvxQkRQAHtp0ij.3bu.ixtBfXzCJ6/3neVfCeXbaM2oBtWTMu');
 
 -- FAQs (only inserted if the table is empty)
 INSERT INTO faqs (question, answer, sort_order, is_active)

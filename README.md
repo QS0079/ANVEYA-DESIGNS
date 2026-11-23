@@ -31,7 +31,7 @@ Production: `npm run build && npm start`
 ## 4. Admin panel
 - URL: **http://localhost:3000/login**
 - Email: **admin@anveya.com** (case-insensitive, so ADMIN@ANVEYA.com works)
-- Password: **Admin@anveya.com**
+- Password: **Admin@anveya**
 
 | Section | What it does |
 |---|---|
