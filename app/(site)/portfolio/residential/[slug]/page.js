@@ -4,7 +4,7 @@ import RoomNav from "@/components/site/RoomNav";
 import RoomGallery from "@/components/site/RoomGallery";
 import { Lines, RImg, Up, Arrow } from "@/components/site/Lines";
 import { ProgressTracker, RelatedProjects, EnquiryCta, SampleNote } from "@/components/site/PortfolioBlocks";
-import { RESIDENTIAL, STATUS_LABEL, getPortfolio, getRelated, projectTitleLines } from "@/lib/portfolio";
+import { RESIDENTIAL, STATUS_LABEL, getPortfolio, getRelated, projectTitleLines, MAX_PHOTOS } from "@/lib/portfolio";
 
 export function generateStaticParams() {
   return RESIDENTIAL.map((p) => ({ slug: p.slug }));
@@ -92,8 +92,8 @@ export default async function ResidentialProject({ params }) {
                 <Lines as="h2" className="display h3" lines={[r.headline]} fit={false} />
                 <Up as="p" className="lead" delay={120}>{r.text}</Up>
               </div>
-              <div className={`room-pics n${Math.min(r.images.length, 4)}`}>
-                {r.images.slice(0, 4).map((im, k) => (
+              <div className={`room-pics n${Math.min(r.images.length, MAX_PHOTOS)}`}>
+                {r.images.slice(0, MAX_PHOTOS).map((im, k) => (
                   <figure key={k}>
                     <RImg src={im.src} alt={`${p.title} — ${im.caption}`} dir={k % 2 ? "down" : undefined} delay={k * 120} />
                     <figcaption>{im.caption}</figcaption>
@@ -117,7 +117,7 @@ export default async function ResidentialProject({ params }) {
               <Up as="p" className="lead" delay={150}>The small decisions — hardware, lighting, finishes — that make a home feel complete.</Up>
             </div>
             <div className="dstrip">
-              {p.details.map((d, i) => (
+              {p.details.slice(0, MAX_PHOTOS).map((d, i) => (
                 <figure key={i}>
                   <RImg src={d.src} alt={`${p.title} — ${d.caption}`} delay={i * 100} />
                   <figcaption>{d.caption}</figcaption>
@@ -141,7 +141,7 @@ export default async function ResidentialProject({ params }) {
               <SampleNote show={p.sampleImages} />
             </Up>
           </div>
-          <RoomGallery groups={p.rooms} title={p.title} />
+          <RoomGallery groups={p.rooms.map((r) => ({ ...r, images: r.images.slice(0, MAX_PHOTOS) }))} title={p.title} />
         </div>
       </section>
 

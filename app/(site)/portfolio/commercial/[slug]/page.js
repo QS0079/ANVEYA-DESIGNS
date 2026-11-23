@@ -4,7 +4,7 @@ import RoomNav from "@/components/site/RoomNav";
 import RoomGallery from "@/components/site/RoomGallery";
 import { Lines, RImg, Up, Arrow } from "@/components/site/Lines";
 import { ProgressTracker, RelatedProjects, EnquiryCta, SampleNote } from "@/components/site/PortfolioBlocks";
-import { COMMERCIAL, getPortfolio, getRelated, projectTitleLines } from "@/lib/portfolio";
+import { COMMERCIAL, getPortfolio, getRelated, projectTitleLines, MAX_PHOTOS } from "@/lib/portfolio";
 
 export function generateStaticParams() {
   return COMMERCIAL.map((p) => ({ slug: p.slug }));
@@ -108,8 +108,8 @@ export default async function CommercialProject({ params }) {
                 <Lines as="h2" className="display h3" lines={[z.headline]} fit={false} />
                 <Up as="p" className="lead" delay={120}>{z.text}</Up>
               </div>
-              <div className={`room-pics n${Math.min(z.images.length, 4)}`}>
-                {z.images.slice(0, 4).map((im, k) => (
+              <div className={`room-pics n${Math.min(z.images.length, MAX_PHOTOS)}`}>
+                {z.images.slice(0, MAX_PHOTOS).map((im, k) => (
                   <figure key={k}>
                     <RImg src={im.src} alt={`${p.title} — ${im.caption}`} dir={k % 2 ? "down" : undefined} delay={k * 120} />
                     <figcaption>{im.caption}</figcaption>
@@ -154,7 +154,7 @@ export default async function CommercialProject({ params }) {
               <SampleNote show={p.sampleImages} />
             </Up>
           </div>
-          <RoomGallery groups={p.zones} title={p.title} />
+          <RoomGallery groups={p.zones.map((z) => ({ ...z, images: z.images.slice(0, MAX_PHOTOS) }))} title={p.title} />
         </div>
       </section>
 
