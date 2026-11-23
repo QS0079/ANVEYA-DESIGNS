@@ -132,7 +132,7 @@ export default async function Home() {
           </div>
           <Slider items={SLIDES} />
           <Up className="center mt-3" delay={150}>
-            <a href="/portfolio" className="btn">View All Projects <Arrow /></a>
+            <a href="/portfolio#all-projects" className="btn">View All Projects <Arrow /></a>
           </Up>
         </div>
       </section>
