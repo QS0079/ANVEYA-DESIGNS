@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, fmtStamp, monthName, monthEnd } from "@/components/admin/util";
 import { LEAD_STATUSES, PROPERTY_TYPES } from "@/lib/defaults";
+import MonthStepper, { thisMonth } from "@/components/admin/MonthStepper";
 
 export default function LeadsPage() {
   const [rows, setRows] = useState([]);
@@ -10,9 +11,10 @@ export default function LeadsPage() {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
   const [type, setType] = useState("");
-  const [month, setMonth] = useState(""); // "YYYY-MM" or "" (custom / all)
-  const [from, setFrom] = useState("");   // "YYYY-MM-DD", inclusive
-  const [to, setTo] = useState("");
+  // opens on the current month; "" = all months / custom range
+  const [month, setMonth] = useState(thisMonth);
+  const [from, setFrom] = useState(() => `${thisMonth()}-01`); // "YYYY-MM-DD", inclusive
+  const [to, setTo] = useState(() => monthEnd(thisMonth()));
   const [months, setMonths] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sel, setSel] = useState(null);
@@ -126,13 +128,10 @@ export default function LeadsPage() {
       </div>
 
       <div className="toolbar datebar">
-        <label className="fld">
+        <div className="fld">
           <span>Month</span>
-          <select className="sel" value={month} onChange={(e) => pickMonth(e.target.value)}>
-            <option value="">{from || to ? "Custom range" : "All months"}</option>
-            {months.map((m) => <option key={m.ym} value={m.ym}>{monthName(m.ym)} · {m.c}</option>)}
-          </select>
-        </label>
+          <MonthStepper value={month} onChange={pickMonth} months={months} allLabel={from || to ? "Custom range" : "All months"} />
+        </div>
         <label className="fld">
           <span>From</span>
           <input type="date" className="inp" value={from} max={to || undefined} onChange={(e) => setDate("from", e.target.value)} />
@@ -141,7 +140,7 @@ export default function LeadsPage() {
           <span>To</span>
           <input type="date" className="inp" value={to} min={from || undefined} onChange={(e) => setDate("to", e.target.value)} />
         </label>
-        {(month || from || to) && <button className="abtn ghost sm" onClick={clearDates}>Clear dates</button>}
+        {(from || to) && <button className="abtn ghost sm" onClick={clearDates}>Show all months</button>}
       </div>
 
       {picked.size > 0 && (

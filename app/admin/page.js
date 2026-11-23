@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { api, fmtDate, monthName } from "@/components/admin/util";
 import { LEAD_STATUSES } from "@/lib/defaults";
+import MonthStepper, { thisMonth } from "@/components/admin/MonthStepper";
 
 export default function Dashboard() {
   const [d, setD] = useState(null);
   const [err, setErr] = useState("");
-  const [month, setMonth] = useState(""); // "" = all time
+  const [month, setMonth] = useState(thisMonth); // opens on the current month; "" = all time
   useEffect(() => {
     let live = true;
     const load = () => api(`/api/admin/stats${month ? `?month=${month}` : ""}`).then((x) => live && setD(x)).catch((e) => live && setErr(e.message));
@@ -25,10 +26,7 @@ export default function Dashboard() {
       <div className="adm-head">
         <div><h1>Dashboard</h1><p>{month ? `Website enquiries in ${monthName(month)}.` : "Overview of website enquiries and content."}</p></div>
         <div className="month-pick">
-          <select className="sel" aria-label="Show dashboard for month" value={month} onChange={(e) => setMonth(e.target.value)}>
-            <option value="">All time</option>
-            {(d?.months || []).map((m) => <option key={m.ym} value={m.ym}>{monthName(m.ym)} · {m.c}</option>)}
-          </select>
+          <MonthStepper value={month} onChange={setMonth} months={d?.months || []} allLabel="All time" label="Dashboard month" />
           <Link href="/admin/leads" className="abtn">View all leads</Link>
         </div>
       </div>

@@ -313,9 +313,28 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
 }
 /* Dashboard month switcher */
 .adm-head .month-pick { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.adm-head .month-pick .sel { min-width: 200px; }
+
 .stat small { display: block; margin-top: 6px; font-size: 11.5px; color: var(--muted); letter-spacing: 0; text-transform: none; }
 .stat small.up { color: #2f7a4a; }
 .stat small.down { color: #a3402f; }
 .datebar .sel, .datebar .inp { height: 44px; box-sizing: border-box; }
 @container (max-width: 860px) { .tbl-wrap .tbl td .stamp { text-align: right; } }
+
+/* Month stepper: ‹ November 2026 › */
+.mstep { display: inline-flex; align-items: stretch; height: 44px; border: 1px solid var(--line); background: var(--paper); }
+.mstep .mstep-sel { border: 0; height: 100%; min-width: 210px; text-align: center; text-align-last: center; font-weight: 500; padding: 0 30px 0 10px; background-color: transparent; cursor: pointer; }
+.mstep .mstep-sel:focus { box-shadow: inset 0 0 0 1px var(--ink); }
+.mstep-arr { width: 42px; flex: none; display: grid; place-items: center; border: 0; background: transparent; color: var(--ink); cursor: pointer; transition: background-color .25s, color .25s; }
+.mstep-arr:first-child { border-right: 1px solid var(--line); }
+.mstep-arr:last-child { border-left: 1px solid var(--line); }
+.mstep-arr:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+.mstep-arr:disabled { opacity: .3; cursor: default; }
+.datebar .mstep .sel { min-width: 210px; height: 100%; }
+@media (max-width: 640px) {
+  .mstep { display: flex; width: 100%; }
+  .mstep .mstep-sel, .datebar .mstep .sel { flex: 1; min-width: 0; width: auto; }
+  .adm-head .month-pick { width: 100%; }
+}
+.mstep { box-sizing: border-box; max-width: 100%; }
+.datebar .fld { min-width: 0; }
+@media (max-width: 640px) { .mstep .mstep-sel { padding-right: 22px; font-size: 13px; } }
