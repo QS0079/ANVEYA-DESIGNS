@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { dateRange } from "@/lib/leadRange";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,8 @@ export async function GET(req) {
   }
   if (status) { where.push("status = ?"); params.push(status); }
   if (type) { where.push("property_type = ?"); params.push(type); }
+  const dr = dateRange(sp); // ?month=YYYY-MM or ?from=&to= (IST days, inclusive)
+  where.push(...dr.where); params.push(...dr.params);
   const w = where.length ? `WHERE ${where.join(" AND ")}` : "";
 
   const [{ total }] = await query(`SELECT COUNT(*) AS total FROM leads ${w}`, params);

@@ -1,13 +1,21 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { api, fmtDate } from "@/components/admin/util";
+import { api, fmtDate, monthName } from "@/components/admin/util";
 import { LEAD_STATUSES } from "@/lib/defaults";
 
 export default function Dashboard() {
   const [d, setD] = useState(null);
   const [err, setErr] = useState("");
-  useEffect(() => { api("/api/admin/stats").then(setD).catch((e) => setErr(e.message)); }, []);
+  const [month, setMonth] = useState(""); // "" = all time
+  useEffect(() => {
+    let live = true;
+    const load = () => api(`/api/admin/stats${month ? `?month=${month}` : ""}`).then((x) => live && setD(x)).catch((e) => live && setErr(e.message));
+    load();
+    window.addEventListener("anveya:leads-changed", load);
+    return () => { live = false; window.removeEventListener("anveya:leads-changed", load); };
+  }, [month]);
+  const diff = d && d.prev ? d.total - d.prev.total : 0;
   const label = (v) => LEAD_STATUSES.find((s) => s.value === v)?.label || v;
   const max = d ? Math.max(1, ...d.byStatus.map((s) => Number(s.c))) : 1;
   const maxT = d ? Math.max(1, ...d.byType.map((s) => Number(s.c))) : 1;
@@ -15,22 +23,41 @@ export default function Dashboard() {
   return (
     <>
       <div className="adm-head">
-        <div><h1>Dashboard</h1><p>Overview of website enquiries and content.</p></div>
-        <Link href="/admin/leads" className="abtn">View all leads</Link>
+        <div><h1>Dashboard</h1><p>{month ? `Website enquiries in ${monthName(month)}.` : "Overview of website enquiries and content."}</p></div>
+        <div className="month-pick">
+          <select className="sel" aria-label="Show dashboard for month" value={month} onChange={(e) => setMonth(e.target.value)}>
+            <option value="">All time</option>
+            {(d?.months || []).map((m) => <option key={m.ym} value={m.ym}>{monthName(m.ym)} · {m.c}</option>)}
+          </select>
+          <Link href="/admin/leads" className="abtn">View all leads</Link>
+        </div>
       </div>
       {err && <div className="panel">{err}</div>}
       {d && (
         <>
-          <div className="stats">
-            <div className="stat"><span>Total leads</span><b>{d.total}</b></div>
-            <div className="stat" style={{ animationDelay: ".06s" }}><span>New / unread</span><b>{d.fresh}</b></div>
-            <div className="stat" style={{ animationDelay: ".12s" }}><span>Last 7 days</span><b>{d.week}</b></div>
-            <div className="stat" style={{ animationDelay: ".18s" }}><span>Last 30 days</span><b>{d.month}</b></div>
-          </div>
+          {d.month ? (
+            <div className="stats" key={d.month}>
+              <div className="stat"><span>Leads in {monthName(d.month, true)}</span><b>{d.total}</b>
+                <small className={diff > 0 ? "up" : diff < 0 ? "down" : ""}>
+                  {diff === 0 ? `Same as ${monthName(d.prev.month, true)}` : `${diff > 0 ? "▲" : "▼"} ${Math.abs(diff)} vs ${monthName(d.prev.month, true)} (${d.prev.total})`}
+                </small>
+              </div>
+              <div className="stat" style={{ animationDelay: ".06s" }}><span>New / unread</span><b>{d.fresh}</b></div>
+              <div className="stat" style={{ animationDelay: ".12s" }}><span>Won</span><b>{d.won}</b></div>
+              <div className="stat" style={{ animationDelay: ".18s" }}><span>In {monthName(d.prev.month, true)}</span><b>{d.prev.total}</b></div>
+            </div>
+          ) : (
+            <div className="stats" key="all">
+              <div className="stat"><span>Total leads</span><b>{d.total}</b></div>
+              <div className="stat" style={{ animationDelay: ".06s" }}><span>New / unread</span><b>{d.fresh}</b></div>
+              <div className="stat" style={{ animationDelay: ".12s" }}><span>Last 7 days</span><b>{d.week}</b></div>
+              <div className="stat" style={{ animationDelay: ".18s" }}><span>Last 30 days</span><b>{d.month30}</b></div>
+            </div>
+          )}
           <div className="grid-2">
             <div className="panel">
-              <h3>Recent enquiries</h3>
-              {d.recent.length === 0 ? <div className="empty">No enquiries yet. They will appear here as soon as someone submits the website form.</div> : (
+              <h3>{d.month ? `Latest in ${monthName(d.month, true)}` : "Recent enquiries"}</h3>
+              {d.recent.length === 0 ? <div className="empty">{d.month ? `No enquiries in ${monthName(d.month)}.` : "No enquiries yet. They will appear here as soon as someone submits the website form."}</div> : (
                 <table className="tbl">
                   <tbody>
                     {d.recent.map((r) => (
@@ -38,7 +65,7 @@ export default function Dashboard() {
                         <td><div className="nm">{r.name}</div><div className="sub">{r.phone}</div></td>
                         <td className="sub" data-label="Property">{r.property_type || "—"}</td>
                         <td data-label="Status"><span className={`pill ${r.status}`}>{label(r.status)}</span></td>
-                        <td className="sub" data-label="Received" style={{ whiteSpace: "nowrap" }}>{fmtDate(r.created_at)}</td>
+                        <td className="sub" data-label="Timestamp" style={{ whiteSpace: "nowrap" }}>{fmtDate(r.created_at)}</td>
                       </tr>
                     ))}
                   </tbody>

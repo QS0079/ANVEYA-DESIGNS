@@ -21,8 +21,11 @@ export default function Header() {
       setSolid(y > limit);
       // while still over the dark hero, give the bar its own dark glass so content never shows through it
       setTint(y > 8 && y <= limit);
-      setHide(y > limit + 200 && y > last + 2);
-      if (y < last - 2) setHide(false);
+      // phones & tablets: tuck the bar away as soon as you scroll down (so hero text never
+      // runs into it) and bring it back, with its background, as soon as you scroll up
+      const hideFrom = window.innerWidth < 1025 ? 70 : limit + 200;
+      if (y > hideFrom && y > last + 2) setHide(true);
+      else if (y < last - 2 || y <= hideFrom) setHide(false);
       last = y;
     };
     onScroll();

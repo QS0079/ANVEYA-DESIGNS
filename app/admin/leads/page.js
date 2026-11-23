@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { api, fmtDate } from "@/components/admin/util";
+import { api, fmtStamp, monthName, monthEnd } from "@/components/admin/util";
 import { LEAD_STATUSES, PROPERTY_TYPES } from "@/lib/defaults";
 
 export default function LeadsPage() {
@@ -10,6 +10,10 @@ export default function LeadsPage() {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("");
   const [type, setType] = useState("");
+  const [month, setMonth] = useState(""); // "YYYY-MM" or "" (custom / all)
+  const [from, setFrom] = useState("");   // "YYYY-MM-DD", inclusive
+  const [to, setTo] = useState("");
+  const [months, setMonths] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sel, setSel] = useState(null);
   const [notes, setNotes] = useState("");
@@ -22,16 +26,39 @@ export default function LeadsPage() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const p = new URLSearchParams({ page, per, q, status, type });
+    const p = new URLSearchParams({ page, per, q, status, type, from, to });
     try {
       const d = await api(`/api/admin/leads?${p}`);
       setRows(d.rows); setTotal(d.total);
       setPicked(new Set());
     } catch (e) { flash(e.message); }
     setLoading(false);
-  }, [page, q, status, type]);
+  }, [page, q, status, type, from, to]);
 
   useEffect(() => { const t = setTimeout(load, 250); return () => clearTimeout(t); }, [load]);
+
+  // months list (first lead's month → this month), refreshed whenever leads change
+  const loadMonths = useCallback(() => { api("/api/admin/leads/months").then((d) => setMonths(d.months)).catch(() => {}); }, []);
+  useEffect(() => {
+    loadMonths();
+    window.addEventListener("anveya:leads-changed", loadMonths);
+    return () => window.removeEventListener("anveya:leads-changed", loadMonths);
+  }, [loadMonths]);
+
+  const pickMonth = (ym) => {
+    setPage(1); setMonth(ym);
+    setFrom(ym ? `${ym}-01` : ""); setTo(ym ? monthEnd(ym) : "");
+  };
+  const setDate = (which, v) => {
+    setPage(1); setMonth("");
+    which === "from" ? setFrom(v) : setTo(v);
+  };
+  const clearDates = () => { setPage(1); setMonth(""); setFrom(""); setTo(""); };
+  const fmtDay = (s) => new Date(`${s}T00:00:00Z`).toLocaleDateString("en-IN", { timeZone: "UTC", day: "numeric", month: "short", year: "numeric" });
+  const rangeText = month ? ` in ${monthName(month)}`
+    : from && to ? ` from ${fmtDay(from)} to ${fmtDay(to)}`
+    : from ? ` since ${fmtDay(from)}` : to ? ` up to ${fmtDay(to)}` : "";
+  const exportHref = `/api/admin/leads/export?${new URLSearchParams({ q, status, type, from, to })}`;
 
   const open = (r) => { setSel(r); setNotes(r.notes || ""); };
 
@@ -82,8 +109,8 @@ export default function LeadsPage() {
   return (
     <>
       <div className="adm-head">
-        <div><h1>Leads</h1><p>{total} enquir{total === 1 ? "y" : "ies"} from the website forms.</p></div>
-        <a className="abtn ghost" href="/api/admin/leads/export">Export CSV</a>
+        <div><h1>Leads</h1><p>{total} enquir{total === 1 ? "y" : "ies"}{rangeText} from the website forms.</p></div>
+        <a className="abtn ghost" href={exportHref}>Export CSV</a>
       </div>
 
       <div className="toolbar">
@@ -98,6 +125,25 @@ export default function LeadsPage() {
         </select>
       </div>
 
+      <div className="toolbar datebar">
+        <label className="fld">
+          <span>Month</span>
+          <select className="sel" value={month} onChange={(e) => pickMonth(e.target.value)}>
+            <option value="">{from || to ? "Custom range" : "All months"}</option>
+            {months.map((m) => <option key={m.ym} value={m.ym}>{monthName(m.ym)} · {m.c}</option>)}
+          </select>
+        </label>
+        <label className="fld">
+          <span>From</span>
+          <input type="date" className="inp" value={from} max={to || undefined} onChange={(e) => setDate("from", e.target.value)} />
+        </label>
+        <label className="fld">
+          <span>To</span>
+          <input type="date" className="inp" value={to} min={from || undefined} onChange={(e) => setDate("to", e.target.value)} />
+        </label>
+        {(month || from || to) && <button className="abtn ghost sm" onClick={clearDates}>Clear dates</button>}
+      </div>
+
       {picked.size > 0 && (
         <div className="bulkbar">
           <span><b>{picked.size}</b> selected</span>
@@ -109,12 +155,13 @@ export default function LeadsPage() {
       <div className="tbl-wrap">
         {!loading && rows.length === 0 ? <div className="empty">No leads found.</div> : (
           <table className="tbl">
-            <thead><tr><th className="chk"><input type="checkbox" aria-label="Select all leads on this page" checked={allOnPage} onChange={toggleAll} /></th><th>Name</th><th>Mobile</th><th>Property</th><th>Budget</th><th>Timeline</th><th>Status</th><th>Received</th></tr></thead>
+            <thead><tr><th className="chk"><input type="checkbox" aria-label="Select all leads on this page" checked={allOnPage} onChange={toggleAll} /></th><th>Name</th><th>Timestamp</th><th>Mobile</th><th>Property</th><th>Budget</th><th>Timeline</th><th>Status</th></tr></thead>
             <tbody>
               {rows.map((r) => (
                 <tr key={r.id} className={`click ${picked.has(r.id) ? "picked" : ""}`} onClick={() => open(r)}>
                   <td className="chk" onClick={(e) => e.stopPropagation()}><input type="checkbox" aria-label={`Select ${r.name}`} checked={picked.has(r.id)} onChange={() => toggle(r.id)} /></td>
                   <td><div className="nm">{r.name}</div><div className="sub">{r.location || "—"}</div></td>
+                  <td data-label="Timestamp" style={{ whiteSpace: "nowrap" }}><div className="stamp"><div>{fmtStamp(r.created_at).date}</div><div className="sub">{fmtStamp(r.created_at).time}</div></div></td>
                   <td data-label="Mobile"><div style={{ whiteSpace: "nowrap" }}>{r.phone}</div>{r.email && <div className="sub">{r.email}</div>}</td>
                   <td data-label="Property"><div>{r.property_type || "—"}</div>{r.service && <div className="sub">{r.service}</div>}</td>
                   <td className="sub" data-label="Budget" style={{ whiteSpace: "nowrap" }}>{r.budget || "—"}</td>
@@ -124,7 +171,6 @@ export default function LeadsPage() {
                       {LEAD_STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
                     </select>
                   </td>
-                  <td className="sub" data-label="Received" style={{ whiteSpace: "nowrap" }}>{fmtDate(r.created_at)}</td>
                 </tr>
               ))}
             </tbody>
@@ -146,7 +192,7 @@ export default function LeadsPage() {
             <button className="abtn ghost sm" onClick={() => setSel(null)} style={{ float: "right" }}>Close</button>
             <div className="eyebrow" style={{ marginBottom: 6 }}>Lead #{sel.id}</div>
             <h2>{sel.name}</h2>
-            <div className="sub muted small">Received {fmtDate(sel.created_at)} · via {sel.source_page || "website"}</div>
+            <div className="sub muted small">{fmtStamp(sel.created_at).date}, {fmtStamp(sel.created_at).time} · via {sel.source_page || "website"}</div>
             <div className="quick">
               <a className="abtn sm" href={`tel:${sel.phone}`}>Call</a>
               <a className="abtn sm ghost" href={wa(sel.phone)} target="_blank" rel="noopener">WhatsApp</a>
