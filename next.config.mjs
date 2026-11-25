@@ -8,6 +8,7 @@ const nextConfig = {
     return [
       { source: "/portfolio/residential/akurdi", destination: "/portfolio/residential/wakad", permanent: true },
       { source: "/portfolio/commercial/dental-clinic", destination: "/portfolio/commercial/office", permanent: true },
+      { source: "/portfolio/commercial/skin-clinic", destination: "/portfolio/commercial/clinic", permanent: true },
     ];
   },
 };

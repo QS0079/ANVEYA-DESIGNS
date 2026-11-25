@@ -4,7 +4,7 @@ import RoomNav from "@/components/site/RoomNav";
 import RoomGallery from "@/components/site/RoomGallery";
 import { Lines, RImg, Up, Arrow } from "@/components/site/Lines";
 import { ProgressTracker, RelatedProjects, EnquiryCta, SampleNote } from "@/components/site/PortfolioBlocks";
-import { COMMERCIAL, getPortfolio, getRelated, projectTitleLines, MAX_PHOTOS } from "@/lib/portfolio";
+import { COMMERCIAL, getPortfolio, getRelated, projectTitleLines, MAX_PHOTOS, highlights } from "@/lib/portfolio";
 
 export function generateStaticParams() {
   return COMMERCIAL.map((p) => ({ slug: p.slug }));
@@ -147,14 +147,14 @@ export default async function CommercialProject({ params }) {
           <div className="two-col-head" style={{ marginBottom: "clamp(30px, 4vw, 56px)" }}>
             <div>
               <Up className="eyebrow">Project Gallery</Up>
-              <Lines className="display h2" lines={["Inside the *C*linic"]} />
+              <Lines className="display h2" lines={["Inside the *S*pace"]} />
             </div>
             <Up delay={150}>
-              <p className="lead">Organised by zone. Click any image to view it full screen.</p>
+              <p className="lead">Two highlights from the project. Click an image to view it full screen.</p>
               <SampleNote show={p.sampleImages} />
             </Up>
           </div>
-          <RoomGallery groups={p.zones.map((z) => ({ ...z, images: z.images.slice(0, MAX_PHOTOS) }))} title={p.title} />
+          <RoomGallery groups={[{ name: "Highlights", images: highlights(p.zones, p.gallery) }]} title={p.title} />
         </div>
       </section>
 

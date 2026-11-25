@@ -4,7 +4,7 @@ import RoomNav from "@/components/site/RoomNav";
 import RoomGallery from "@/components/site/RoomGallery";
 import { Lines, RImg, Up, Arrow } from "@/components/site/Lines";
 import { ProgressTracker, RelatedProjects, EnquiryCta, SampleNote } from "@/components/site/PortfolioBlocks";
-import { RESIDENTIAL, STATUS_LABEL, getPortfolio, getRelated, projectTitleLines, MAX_PHOTOS } from "@/lib/portfolio";
+import { RESIDENTIAL, STATUS_LABEL, getPortfolio, getRelated, projectTitleLines, MAX_PHOTOS, highlights } from "@/lib/portfolio";
 
 export function generateStaticParams() {
   return RESIDENTIAL.map((p) => ({ slug: p.slug }));
@@ -137,11 +137,11 @@ export default async function ResidentialProject({ params }) {
               <Lines className="display h2" lines={[ongoing ? "Design *V*isuals" : "Inside the *H*ome"]} />
             </div>
             <Up delay={150}>
-              <p className="lead">{ongoing ? "Approved design visuals and references, organised by room. Each image is labelled." : "Organised by room. Click any image to view it full screen."}</p>
+              <p className="lead">{ongoing ? "Two highlights from the approved design visuals." : "Two highlights from the home. Click an image to view it full screen."}</p>
               <SampleNote show={p.sampleImages} />
             </Up>
           </div>
-          <RoomGallery groups={p.rooms.map((r) => ({ ...r, images: r.images.slice(0, MAX_PHOTOS) }))} title={p.title} />
+          <RoomGallery groups={[{ name: "Highlights", images: highlights(p.rooms, p.gallery) }]} title={p.title} />
         </div>
       </section>
 
