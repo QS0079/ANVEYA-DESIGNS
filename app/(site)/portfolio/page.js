@@ -10,7 +10,7 @@ import { PORTFOLIO, RESIDENTIAL, COMMERCIAL } from "@/lib/portfolio";
 export const metadata = {
   title: "Interior Design Portfolio | Residential & Commercial Projects in Pune",
   description:
-    "Explore Anveya Designs' residential and commercial interior design projects across Pune — completed homes, ongoing projects and healthcare interiors.",
+    "Explore Anveya Designs' residential and commercial interior design projects across Pune — completed homes, ongoing projects, offices and clinics.",
   alternates: { canonical: "/portfolio" },
 };
 
@@ -59,9 +59,9 @@ export default function PortfolioPage() {
                 <a href="/portfolio/commercial" className="pcat card-hover">
                   <RImg src={COMMERCIAL[0]?.cover || IMG.office2} alt="Commercial interior projects" dir="down" />
                   <div className="pcat-txt">
-                    <span>{COMMERCIAL.length} Projects · Healthcare</span>
+                    <span>{COMMERCIAL.length} Projects · Offices & Clinics</span>
                     <h3 className="display h3">Commercial Projects</h3>
-                    <p>Functional commercial spaces with a distinct identity, including clinic interiors.</p>
+                    <p>Functional commercial spaces with a distinct identity, including offices and clinics.</p>
                     <span className="link-arrow">View Commercial <span className="arr"><Arrow /></span></span>
                   </div>
                 </a>

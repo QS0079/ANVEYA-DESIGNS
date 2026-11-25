@@ -37,7 +37,7 @@ const SLIDES = PORTFOLIO.map((p) => {
   const pics = sections.flatMap((r) => r.images).map((im) => im.src).filter((src) => src !== p.cover);
   const cat = p.category === "residential" ? "Residential" : "Commercial";
   return {
-    tag: `${cat} · ${p.status ? STATUS_LABEL[p.status] : "Healthcare"}`,
+    tag: `${cat}${p.status ? ` · ${STATUS_LABEL[p.status]}` : p.sector ? ` · ${p.sector}` : ""}`,
     title: p.title,
     text: p.concept,
     img: p.cover,

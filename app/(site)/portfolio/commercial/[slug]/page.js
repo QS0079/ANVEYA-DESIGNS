@@ -34,7 +34,7 @@ export default async function CommercialProject({ params }) {
         <Hero
           image={p.hero}
           alt={`${p.title} interior`}
-          eyebrow={`Commercial · Healthcare · ${p.location}`}
+          eyebrow={`Commercial · ${p.sector} · ${p.location}`}
           lines={projectTitleLines(p)}
           lineClass={["", "indent-2"]}
           variant="short"
@@ -82,7 +82,7 @@ export default async function CommercialProject({ params }) {
               <Up className="eyebrow">Experience & Flow</Up>
               <Lines className="display h2" lines={["The Visitor *J*ourney"]} />
             </div>
-            <Up as="p" className="lead" delay={150}>The layout follows the visitor from the entrance to reception and consultation, so every step feels clear and unhurried.</Up>
+            <Up as="p" className="lead" delay={150}>The layout follows the visitor from the entrance through every space, so each step feels clear and unhurried.</Up>
           </div>
           <ol className="pflow">
             {p.flow.map((s, i) => (
@@ -175,7 +175,7 @@ export default async function CommercialProject({ params }) {
 
       <EnquiryCta
         lines={["Planning a *C*linic", "Interior?"]}
-        text="Request a commercial design consultation — tell us about your clinic and how you'd like it to work for your patients and team."
+        text="Request a commercial design consultation. Tell us about your office or clinic and how you'd like it to work for your team and visitors."
         label="Request a Consultation"
         project={p.title}
         image={p.cover}

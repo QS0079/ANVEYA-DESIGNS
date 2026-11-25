@@ -45,7 +45,7 @@ export default function ResidentialListing() {
                     <Up className="prow-txt" delay={120}>
                       <span className="prow-n">Residential {String(i + 1).padStart(2, "0")}</span>
                       <h2 className="display h3">{p.title}</h2>
-                      <div className="prow-meta"><span>{p.location}</span><i /><span>{STATUS_LABEL[p.status] || "—"}</span></div>
+                      <div className="prow-meta"><span>{p.location}</span>{p.status && <><i /><span>{STATUS_LABEL[p.status]}</span></>}</div>
                       <p>{p.concept}</p>
                       {p.status && <p className="prow-note">{NOTE[p.status]}</p>}
                       <span className="link-arrow">Explore Project <span className="arr"><Arrow /></span></span>

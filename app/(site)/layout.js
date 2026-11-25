@@ -5,7 +5,6 @@ import Footer from "@/components/site/Footer";
 import Motion from "@/components/site/Motion";
 import CookieBanner from "@/components/site/CookieBanner";
 import Popup from "@/components/site/Popup";
-import Intro from "@/components/site/Intro";
 import { CONTACT, socialLinks } from "@/lib/defaults";
 
 // Business details for search engines (links the website to the studio's social profiles)
@@ -31,7 +30,6 @@ export default function SiteLayout({ children }) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG) }} />
-      <Intro />
       <Motion />
       <Header />
       <main>{children}</main>

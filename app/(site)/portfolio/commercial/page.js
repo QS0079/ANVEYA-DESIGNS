@@ -5,8 +5,8 @@ import { IMG } from "@/lib/defaults";
 import { COMMERCIAL, projectHref } from "@/lib/portfolio";
 
 export const metadata = {
-  title: "Commercial & Clinic Interior Design Projects | Anveya Designs",
-  description: "Functional commercial spaces with a distinct identity — clinic and healthcare interiors by Anveya Designs.",
+  title: "Office & Clinic Interior Design Projects | Anveya Designs",
+  description: "Functional commercial spaces with a distinct identity: office and clinic interiors by Anveya Designs.",
   alternates: { canonical: "/portfolio/commercial" },
 };
 
@@ -22,7 +22,7 @@ export default function CommercialListing() {
       <div className="hero-stack">
         <Hero
           image={COMMERCIAL[0]?.hero || IMG.office1}
-          alt="Clinic interior by Anveya Designs"
+          alt="Office interior by Anveya Designs"
           eyebrow="Portfolio · Commercial"
           lines={["*F*unctional Commercial", "Spaces with a Distinct Identity."]}
           lineClass={["", "indent-1"]}
@@ -41,7 +41,7 @@ export default function CommercialListing() {
                   <a href={projectHref(p)} className="pcat card-hover" key={p.slug}>
                     <RImg src={p.cover} alt={`${p.title} interior`} dir={i % 2 ? "down" : undefined} />
                     <div className="pcat-txt">
-                      <span>Commercial / Healthcare · {p.location}</span>
+                      <span>Commercial / {p.sector} · {p.location}</span>
                       <h2 className="display h3">{p.title}</h2>
                       <p>{p.subtitle}</p>
                       <span className="link-arrow">Explore Project <span className="arr"><Arrow /></span></span>
@@ -77,7 +77,7 @@ export default function CommercialListing() {
 
       <EnquiryCta
         lines={["Planning a *C*linic", "Interior?"]}
-        text="Request a commercial design consultation — tell us about your clinic or workspace and how you'd like it to work."
+        text="Request a commercial design consultation. Tell us about your office or clinic and how you'd like it to work."
         label="Request a Consultation"
         image={COMMERCIAL[1]?.cover || IMG.office3}
       />
