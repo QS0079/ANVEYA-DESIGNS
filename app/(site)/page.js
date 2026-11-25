@@ -55,7 +55,7 @@ export default async function Home() {
       <div className="hero-stack">
         <Hero
           image={IMG.hero}
-          video={{ src: "/media/hero.mp4", mobile: "/media/hero-720.mp4", poster: "/media/hero-poster.jpg" }}
+          video={{ src: "/media/hero-hd-v2.mp4", mobile: "/media/hero-hd-v2-720.mp4", poster: "/media/hero-hd-v2-poster.jpg" }}
           alt="Walkthrough of a contemporary home interior: living room, kitchen, bedroom and bathroom"
           eyebrow="Residential & Commercial Interior Design"
           lines={["Thoughtfully", "*D*esigned Interiors", "for the Way You", "*L*ive and Work."]}
