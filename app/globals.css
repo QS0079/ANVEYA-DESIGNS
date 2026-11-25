@@ -1096,30 +1096,6 @@ p { margin: 0 0 1em; }
 @media (max-width: 520px) { .lg-toc { columns: 1; } .lg-sec { padding: 22px 20px 16px; } }
 
 /* ==========================================================
-   LOGO INTRO (first load) — transparent frosted layer + slide
-   ========================================================== */
-.intro {
-  position: fixed; inset: 0; z-index: 500;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: transparent;
-  -webkit-backdrop-filter: blur(22px) saturate(1.05); backdrop-filter: blur(22px) saturate(1.05);
-  transform: translateY(0); transition: transform .8s var(--ease-io);
-  will-change: transform;
-}
-.intro.out { transform: translateY(-100%); }
-.intro-mask { overflow: hidden; padding: 6px 10px; }
-.intro-logo {
-  display: block; width: auto; height: clamp(150px, 26vh, 240px);
-  transform: translateY(110%); animation: introSlideIn .8s var(--ease) .05s forwards;
-  filter: drop-shadow(0 6px 24px rgba(0, 0, 0, .35));
-}
-.intro-bar { position: relative; width: 120px; height: 1px; margin-top: 26px; background: rgba(249, 243, 232, .35); overflow: hidden; }
-.intro-bar::after { content: ""; position: absolute; inset: 0; background: var(--gold-light); transform: scaleX(0); transform-origin: left; animation: introBar .9s var(--ease) .15s forwards; }
-@keyframes introSlideIn { to { transform: translateY(0); } }
-@keyframes introBar { to { transform: scaleX(1); } }
-html.intro-on, html.intro-on body { overflow: hidden; }
-
-/* ==========================================================
    RESPONSIVE POLISH — tablet & mobile alignment
    ========================================================== */
 /* Headings: when a designed line has to wrap, split it evenly instead of leaving one word alone */
