@@ -55,7 +55,7 @@ export default async function Home() {
       <div className="hero-stack">
         <Hero
           image={IMG.hero}
-          video={{ src: "/media/hero-hd-v2.mp4", mobile: "/media/hero-hd-v2-720.mp4", poster: "/media/hero-hd-v2-poster.jpg" }}
+          video={{ src: "/media/hero-hd-v3.mp4", mobile: "/media/hero-hd-v3-720.mp4", poster: "/media/hero-hd-v3-poster.jpg" }}
           alt="Walkthrough of a contemporary home interior: living room, kitchen, bedroom and bathroom"
           eyebrow="Residential & Commercial Interior Design"
           lines={["Thoughtfully", "*D*esigned Interiors", "for the Way You", "*L*ive and Work."]}
@@ -82,7 +82,7 @@ export default async function Home() {
                 <Up as="p" className="lead" delay={290}>From comfortable homes to inspiring workspaces, we approach every project with creativity, careful planning and an eye for detail.</Up>
                 <Up className="quiet-stats" delay={330}>
                   <div><span className="qs-num">8+</span><span className="qs-label">Years of experience</span></div>
-                  <div><span className="qs-num">70+</span><span className="qs-label">Projects delivered</span></div>
+                  <div><span className="qs-num">100+</span><span className="qs-label">Projects delivered</span></div>
                 </Up>
                 <Up delay={360}><a href="/about-us" className="link-arrow mt-1">Know More About Us <span className="arr"><Arrow /></span></a></Up>
               </div>
