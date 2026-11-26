@@ -4,7 +4,7 @@ import RoomNav from "@/components/site/RoomNav";
 import RoomGallery from "@/components/site/RoomGallery";
 import { Lines, RImg, Up, Arrow } from "@/components/site/Lines";
 import { ProgressTracker, RelatedProjects, EnquiryCta, SampleNote } from "@/components/site/PortfolioBlocks";
-import { COMMERCIAL, getPortfolio, getRelated, projectTitleLines, MAX_PHOTOS, highlights, isPortrait } from "@/lib/portfolio";
+import { COMMERCIAL, getPortfolio, getRelated, projectTitleLines, MAX_PHOTOS, highlights, isPortrait, projectHref } from "@/lib/portfolio";
 
 export function generateStaticParams() {
   return COMMERCIAL.map((p) => ({ slug: p.slug }));
@@ -183,6 +183,7 @@ export default async function CommercialProject({ params }) {
         text="Request a commercial design consultation. Tell us about your office or clinic and how you'd like it to work for your team and visitors."
         label="Request a Consultation"
         project={p.title}
+        path={projectHref(p)}
         image={p.sampleImages ? p.cover : null}
       />
     </>

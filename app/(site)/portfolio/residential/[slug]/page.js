@@ -4,7 +4,7 @@ import RoomNav from "@/components/site/RoomNav";
 import RoomGallery from "@/components/site/RoomGallery";
 import { Lines, RImg, Up, Arrow } from "@/components/site/Lines";
 import { ProgressTracker, RelatedProjects, EnquiryCta, SampleNote } from "@/components/site/PortfolioBlocks";
-import { RESIDENTIAL, STATUS_LABEL, getPortfolio, getRelated, projectTitleLines, MAX_PHOTOS, highlights, isPortrait } from "@/lib/portfolio";
+import { RESIDENTIAL, STATUS_LABEL, getPortfolio, getRelated, projectTitleLines, MAX_PHOTOS, highlights, isPortrait, projectHref } from "@/lib/portfolio";
 
 export function generateStaticParams() {
   return RESIDENTIAL.map((p) => ({ slug: p.slug }));
@@ -179,6 +179,7 @@ export default async function ResidentialProject({ params }) {
         lines={["Planning an Interior", "Project in *P*une?"]}
         text="Tell us about your home — we'll call you back to understand your requirements and talk through the next steps."
         project={p.title}
+        path={projectHref(p)}
         image={p.sampleImages ? p.cover : null}
       />
     </>

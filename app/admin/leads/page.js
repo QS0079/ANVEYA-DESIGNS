@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, fmtStamp, monthName, monthEnd } from "@/components/admin/util";
 import { LEAD_STATUSES, PROPERTY_TYPES } from "@/lib/defaults";
+import { waLink, leadReplyMessage } from "@/lib/whatsapp";
 import MonthStepper, { thisMonth } from "@/components/admin/MonthStepper";
 
 export default function LeadsPage() {
@@ -106,7 +107,6 @@ export default function LeadsPage() {
 
   const label = (v) => LEAD_STATUSES.find((s) => s.value === v)?.label || v;
   const pages = Math.max(1, Math.ceil(total / per));
-  const wa = (p) => `https://wa.me/${p.replace(/\D/g, "").replace(/^0/, "").replace(/^(\d{10})$/, "91$1")}`;
 
   return (
     <>
@@ -194,7 +194,7 @@ export default function LeadsPage() {
             <div className="sub muted small">{fmtStamp(sel.created_at).date}, {fmtStamp(sel.created_at).time} · via {sel.source_page || "website"}</div>
             <div className="quick">
               <a className="abtn sm" href={`tel:${sel.phone}`}>Call</a>
-              <a className="abtn sm ghost" href={wa(sel.phone)} target="_blank" rel="noopener">WhatsApp</a>
+              <a className="abtn sm ghost" href={waLink(sel.phone, leadReplyMessage(sel))} target="_blank" rel="noopener" title="Opens WhatsApp with a ready professional reply">WhatsApp</a>
               {sel.email && <a className="abtn sm ghost" href={`mailto:${sel.email}`}>Email</a>}
             </div>
             <div className="kv"><span>Status</span><div>

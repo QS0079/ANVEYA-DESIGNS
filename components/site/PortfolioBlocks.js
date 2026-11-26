@@ -2,12 +2,8 @@ import { Lines, Up, Arrow } from "./Lines";
 import ProjectCard from "./ProjectCard";
 import { CONTACT, IMG } from "@/lib/defaults";
 import { STAGES } from "@/lib/portfolio";
+import { waLink, visitorMessage } from "@/lib/whatsapp";
 
-const waLink = (text) => {
-  const digits = String(CONTACT.phone || "").replace(/\D/g, "");
-  const num = digits.length === 10 ? `91${digits}` : digits;
-  return `https://wa.me/${num}?text=${encodeURIComponent(text)}`;
-};
 
 /** "Understand the space → Plan the details → Deliver thoughtfully" strip */
 export function ApproachStrip() {
@@ -78,7 +74,7 @@ export function RelatedProjects({ projects, title = ["More *P*rojects"] }) {
 }
 
 /** Enquiry CTA with consultation popup + WhatsApp */
-export function EnquiryCta({ lines, text, project, image = IMG.living4, label = "Book a Consultation" }) {
+export function EnquiryCta({ lines, text, project, path, image = IMG.living4, label = "Book a Consultation" }) {
   return (
     <section className="cta-band section">
       {image && <div className="bgimg"><img src={image} alt="" data-parallax="0.6" loading="lazy" /></div>}
@@ -90,7 +86,7 @@ export function EnquiryCta({ lines, text, project, image = IMG.living4, label = 
         <Up className="btn-row" delay={320}>
           <a href="/contact-us#enquiry" className="btn light" data-popup>{label} <Arrow /></a>
           {CONTACT.phone && (
-            <a href={waLink(project ? `Hi Anveya Designs, I saw the ${project} project on your website and would like to discuss my space.` : "Hi Anveya Designs, I'd like to discuss an interior project.")} className="link-arrow" target="_blank" rel="noopener noreferrer" style={{ alignSelf: "center", marginLeft: 16 }}>
+            <a href={waLink(CONTACT.phone, visitorMessage({ project, path }))} className="link-arrow" target="_blank" rel="noopener noreferrer" style={{ alignSelf: "center", marginLeft: 16 }}>
               Chat on WhatsApp <span className="arr"><Arrow /></span>
             </a>
           )}
