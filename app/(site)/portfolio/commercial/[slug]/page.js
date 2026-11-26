@@ -108,7 +108,7 @@ export default async function CommercialProject({ params }) {
                 <Lines as="h2" className="display h3" lines={[z.headline]} fit={false} />
                 <Up as="p" className="lead" delay={120}>{z.text}</Up>
               </div>
-              <div className={`room-pics n${Math.min(z.images.length, MAX_PHOTOS)}`}>
+              <div className={`room-pics n${Math.min(z.images.length, MAX_PHOTOS)}${p.landscapeImages ? " land" : ""}`}>
                 {z.images.slice(0, MAX_PHOTOS).map((im, k) => (
                   <figure key={k}>
                     <RImg src={im.src} alt={`${p.title} — ${im.caption}`} dir={k % 2 ? "down" : undefined} delay={k * 120} />
