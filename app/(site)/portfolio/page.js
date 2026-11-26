@@ -57,7 +57,7 @@ export default function PortfolioPage() {
                   </div>
                 </a>
                 <a href="/portfolio/commercial" className="pcat card-hover">
-                  <RImg src={COMMERCIAL[0]?.cover || IMG.office2} alt="Commercial interior projects" dir="down" />
+                  <RImg src={COMMERCIAL[0]?.zones?.at(-1)?.images?.[0]?.src || IMG.office2} alt="Commercial interior projects" dir="down" />
                   <div className="pcat-txt">
                     <span>{COMMERCIAL.length} Projects · Offices & Clinics</span>
                     <h3 className="display h3">Commercial Projects</h3>
@@ -82,7 +82,7 @@ export default function PortfolioPage() {
             <Up as="p" className="lead" delay={150}>A closer look at a few projects — the people they were designed for, the challenges they solved and the details that bring them together.</Up>
           </div>
           <div className="pfeat">
-            {featured.map((p, i) => <ProjectCard key={p.slug} p={p} size={i === 0 ? "lg" : ""} dir={i % 2 ? "down" : undefined} />)}
+            {featured.map((p, i) => <ProjectCard key={p.slug} p={p} src={p.hero} size={i === 0 ? "lg" : ""} dir={i % 2 ? "down" : undefined} />)}
           </div>
         </div>
       </section>

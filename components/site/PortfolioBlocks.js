@@ -81,7 +81,7 @@ export function RelatedProjects({ projects, title = ["More *P*rojects"] }) {
 export function EnquiryCta({ lines, text, project, image = IMG.living4, label = "Book a Consultation" }) {
   return (
     <section className="cta-band section">
-      <div className="bgimg"><img src={image} alt="" data-parallax="0.6" loading="lazy" /></div>
+      {image && <div className="bgimg"><img src={image} alt="" data-parallax="0.6" loading="lazy" /></div>}
       <div className="shade" />
       <div className="wrap">
         <Up className="eyebrow" style={{ justifyContent: "center", color: "rgba(249,243,232,.7)" }}>Start a Conversation</Up>

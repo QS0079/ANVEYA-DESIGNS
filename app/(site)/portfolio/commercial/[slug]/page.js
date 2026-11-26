@@ -26,6 +26,7 @@ export default async function CommercialProject({ params }) {
   const { slug } = await params;
   const p = getPortfolio("commercial", slug);
   if (!p) notFound();
+  const gallery = highlights(p.zones, p.gallery);
 
   return (
     <>
@@ -141,22 +142,26 @@ export default async function CommercialProject({ params }) {
         </section>
       )}
 
-      {/* Image gallery (by zone) */}
-      <section className="section bg-cream" id="gallery">
-        <div className="wrap">
-          <div className="two-col-head" style={{ marginBottom: "clamp(30px, 4vw, 56px)" }}>
-            <div>
-              <Up className="eyebrow">Project Gallery</Up>
-              <Lines className="display h2" lines={["Inside the *S*pace"]} />
+      {/* Image gallery (by zone) — only photos not shown elsewhere on the page */}
+      {gallery.length > 0 ? (
+        <section className="section bg-cream" id="gallery">
+          <div className="wrap">
+            <div className="two-col-head" style={{ marginBottom: "clamp(30px, 4vw, 56px)" }}>
+              <div>
+                <Up className="eyebrow">Project Gallery</Up>
+                <Lines className="display h2" lines={["Inside the *S*pace"]} />
+              </div>
+              <Up delay={150}>
+                <p className="lead">More from the project. Click an image to view it full screen.</p>
+                <SampleNote show={p.sampleImages} />
+              </Up>
             </div>
-            <Up delay={150}>
-              <p className="lead">Two highlights from the project. Click an image to view it full screen.</p>
-              <SampleNote show={p.sampleImages} />
-            </Up>
+            <RoomGallery groups={[{ name: "Highlights", images: gallery }]} title={p.title} />
           </div>
-          <RoomGallery groups={[{ name: "Highlights", images: highlights(p.zones, p.gallery) }]} title={p.title} />
-        </div>
-      </section>
+        </section>
+      ) : p.sampleImages ? (
+        <div className="wrap" style={{ paddingBottom: 24 }}><SampleNote show /></div>
+      ) : null}
 
       {/* Outcome / progress */}
       <section className="section tight bg-cream2">
@@ -174,11 +179,11 @@ export default async function CommercialProject({ params }) {
       <RelatedProjects projects={getRelated(p)} />
 
       <EnquiryCta
-        lines={["Planning a *C*linic", "Interior?"]}
+        lines={["Planning a *C*ommercial", "Interior?"]}
         text="Request a commercial design consultation. Tell us about your office or clinic and how you'd like it to work for your team and visitors."
         label="Request a Consultation"
         project={p.title}
-        image={p.cover}
+        image={p.sampleImages ? p.cover : null}
       />
     </>
   );

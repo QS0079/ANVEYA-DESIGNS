@@ -2,12 +2,12 @@ import { RImg, Arrow } from "./Lines";
 import { STATUS_LABEL, projectHref } from "@/lib/portfolio";
 
 /** Portfolio project card — image, location, type, status and an "Explore Project" link. */
-export default function ProjectCard({ p, index, size = "", dir }) {
+export default function ProjectCard({ p, index, size = "", dir, src }) {
   const cat = p.category === "residential" ? "Residential" : "Commercial";
   return (
     <a href={projectHref(p)} className={`pcard card-hover ${size}`}>
       <div className="pcard-media">
-        <RImg src={p.cover} alt={`${p.title} — ${p.location}`} dir={dir} />
+        <RImg src={src || p.cover} alt={`${p.title} — ${p.location}`} dir={dir} />
         {p.status && <span className={`pbadge ${p.status}`}>{STATUS_LABEL[p.status]}</span>}
       </div>
       <div className="pcard-body">

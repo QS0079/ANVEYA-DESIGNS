@@ -26,6 +26,7 @@ export default async function ResidentialProject({ params }) {
   const { slug } = await params;
   const p = getPortfolio("residential", slug);
   if (!p) notFound();
+  const gallery = highlights(p.rooms, p.gallery);
   const ongoing = p.status === "ongoing";
 
   return (
@@ -128,22 +129,26 @@ export default async function ResidentialProject({ params }) {
         </section>
       )}
 
-      {/* 06 — Project gallery (by room) */}
-      <section className="section bg-cream" id="gallery">
-        <div className="wrap">
-          <div className="two-col-head" style={{ marginBottom: "clamp(30px, 4vw, 56px)" }}>
-            <div>
-              <Up className="eyebrow">Project Gallery</Up>
-              <Lines className="display h2" lines={[ongoing ? "Design *V*isuals" : "Inside the *H*ome"]} />
+      {/* 06 — Project gallery (by room) — only photos not shown elsewhere on the page */}
+      {gallery.length > 0 ? (
+        <section className="section bg-cream" id="gallery">
+          <div className="wrap">
+            <div className="two-col-head" style={{ marginBottom: "clamp(30px, 4vw, 56px)" }}>
+              <div>
+                <Up className="eyebrow">Project Gallery</Up>
+                <Lines className="display h2" lines={[ongoing ? "Design *V*isuals" : "Inside the *H*ome"]} />
+              </div>
+              <Up delay={150}>
+                <p className="lead">{ongoing ? "More from the approved design visuals." : "More from the home. Click an image to view it full screen."}</p>
+                <SampleNote show={p.sampleImages} />
+              </Up>
             </div>
-            <Up delay={150}>
-              <p className="lead">{ongoing ? "Two highlights from the approved design visuals." : "Two highlights from the home. Click an image to view it full screen."}</p>
-              <SampleNote show={p.sampleImages} />
-            </Up>
+            <RoomGallery groups={[{ name: "Highlights", images: gallery }]} title={p.title} />
           </div>
-          <RoomGallery groups={[{ name: "Highlights", images: highlights(p.rooms, p.gallery) }]} title={p.title} />
-        </div>
-      </section>
+        </section>
+      ) : p.sampleImages ? (
+        <div className="wrap" style={{ paddingBottom: 24 }}><SampleNote show /></div>
+      ) : null}
 
       {/* 07 — Process (completed) or progress (ongoing) */}
       <section className="section bg-cream2">
@@ -174,7 +179,7 @@ export default async function ResidentialProject({ params }) {
         lines={["Planning an Interior", "Project in *P*une?"]}
         text="Tell us about your home — we'll call you back to understand your requirements and talk through the next steps."
         project={p.title}
-        image={p.cover}
+        image={p.sampleImages ? p.cover : null}
       />
     </>
   );
