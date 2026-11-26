@@ -1301,7 +1301,7 @@ p { margin: 0 0 1em; }
 .rgal-grid.c4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .rgal-item { display: block; padding: 0; border: 0; background: none; text-align: left; cursor: zoom-in; min-width: 0; }
 .rgal-item .rimg { aspect-ratio: 4 / 3; }
-.rgal-grid.c1 .rgal-item .rimg { aspect-ratio: 21 / 9; }
+.rgal-grid.c1 .rgal-item .rimg { aspect-ratio: 16 / 9; }
 .rgal-item:hover .rimg.is-in img { transform: scale(1.05); }
 .rgal-cap { display: block; font-size: 12px; color: var(--muted); margin-top: 8px; }
 .sample-note { margin: 14px 0 0; font-size: 12px; color: var(--muted); font-style: italic; padding-left: 12px; border-left: 2px solid var(--gold); max-width: 460px; }
@@ -1475,3 +1475,8 @@ html:has(.header.hide) .roomnav { top: 0; }
 .room-pics.land.n2 figure .rimg { aspect-ratio: 16 / 10; }
 .room-pics.land.n1 figure .rimg { aspect-ratio: 16 / 9; }
 @media (max-width: 700px) { .room-pics.land.n2 { grid-template-columns: 1fr; } }
+
+/* Real renders keep their own shape (aspect ratio set inline from the photo) */
+.room-pics figure.port { max-width: 600px; }
+.room-pics.n2 figure.port { max-width: none; }
+.room-pics.n1 figure.port { width: 100%; justify-self: center; }

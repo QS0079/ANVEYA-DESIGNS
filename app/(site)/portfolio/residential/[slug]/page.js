@@ -4,7 +4,7 @@ import RoomNav from "@/components/site/RoomNav";
 import RoomGallery from "@/components/site/RoomGallery";
 import { Lines, RImg, Up, Arrow } from "@/components/site/Lines";
 import { ProgressTracker, RelatedProjects, EnquiryCta, SampleNote } from "@/components/site/PortfolioBlocks";
-import { RESIDENTIAL, STATUS_LABEL, getPortfolio, getRelated, projectTitleLines, MAX_PHOTOS, highlights } from "@/lib/portfolio";
+import { RESIDENTIAL, STATUS_LABEL, getPortfolio, getRelated, projectTitleLines, MAX_PHOTOS, highlights, isPortrait } from "@/lib/portfolio";
 
 export function generateStaticParams() {
   return RESIDENTIAL.map((p) => ({ slug: p.slug }));
@@ -94,8 +94,8 @@ export default async function ResidentialProject({ params }) {
               </div>
               <div className={`room-pics n${Math.min(r.images.length, MAX_PHOTOS)}`}>
                 {r.images.slice(0, MAX_PHOTOS).map((im, k) => (
-                  <figure key={k}>
-                    <RImg src={im.src} alt={`${p.title} — ${im.caption}`} dir={k % 2 ? "down" : undefined} delay={k * 120} />
+                  <figure key={k} className={isPortrait(im.ar) ? "port" : undefined}>
+                    <RImg src={im.src} alt={`${p.title} — ${im.caption}`} dir={k % 2 ? "down" : undefined} delay={k * 120} style={im.ar ? { aspectRatio: im.ar } : undefined} />
                     <figcaption>{im.caption}</figcaption>
                   </figure>
                 ))}
