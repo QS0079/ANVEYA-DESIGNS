@@ -89,7 +89,10 @@ export default async function Footer() {
       {/* ---- bottom bar ---- */}
       <div className="wrap">
         <div className="ft-bottom">
-          <span>© {new Date().getFullYear()} Anveya Designs. All rights reserved.</span>
+          <div className="ft-legal">
+            <span>© {new Date().getFullYear()} Anveya Designs. All rights reserved.</span>
+            <span className="ft-credit">Developed By – <a href="https://quickuppsoftech.com/" target="_blank" rel="noopener noreferrer">Quickupp Softech Team</a></span>
+          </div>
           <nav>
             <a href="/privacy-policy">Privacy Policy</a>
             <a href="/terms-and-conditions">Terms &amp; Conditions</a>

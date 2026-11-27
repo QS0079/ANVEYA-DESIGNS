@@ -1480,3 +1480,9 @@ html:has(.header.hide) .roomnav { top: 0; }
 .room-pics figure.port { max-width: 600px; }
 .room-pics.n2 figure.port { max-width: none; }
 .room-pics.n1 figure.port { width: 100%; justify-self: center; }
+
+/* Footer: developer credit under the copyright */
+.ft-legal { display: grid; gap: 6px; }
+.ft-credit { font-size: 11.5px; letter-spacing: .02em; }
+.ft-bottom .ft-credit a { color: inherit; border-bottom: 1px solid currentColor; padding-bottom: 1px; }
+.ft-bottom .ft-credit a:hover { color: var(--burgundy); }
