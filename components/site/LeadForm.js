@@ -57,7 +57,6 @@ export default function LeadForm({ source = "website", submitLabel = "Book Your 
         return;
       }
       setState("done");
-      try { localStorage.setItem("anveya_enquiry_sent", String(Date.now())); } catch {}
       onDone && onDone();
     } catch {
       setMsg("Network error. Please try again.");

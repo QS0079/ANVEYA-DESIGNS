@@ -85,6 +85,16 @@ export default function AdminShell({ user, children }) {
   const [fresh, setFresh] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const idle = useIdleLogout();
+  // on the Leads page the export follows the filters applied there
+  const [leadsExport, setLeadsExport] = useState(null);
+  useEffect(() => {
+    const sync = () => setLeadsExport(window.__anveyaLeadsExport || null);
+    sync();
+    window.addEventListener("anveya:leads-filter", sync);
+    return () => window.removeEventListener("anveya:leads-filter", sync);
+  }, []);
+  const onLeads = pathname.startsWith("/admin/leads");
+  const exp = onLeads && leadsExport ? leadsExport : null;
 
   useEffect(() => { setOpen(false); }, [pathname]);
   useEffect(() => {
@@ -130,7 +140,7 @@ export default function AdminShell({ user, children }) {
 
         <div className="adm-group">Quick actions</div>
         <nav className="adm-nav">
-          <a href="/api/admin/leads/export"><Icon n="csv" /><span>Export all leads (CSV)</span></a>
+          <a href={exp ? exp.href : "/api/admin/leads/export"}><Icon n="csv" /><span>{exp?.filtered ? "Export filtered leads (CSV)" : "Export all leads (CSV)"}</span></a>
           <a href="/" target="_blank" rel="noopener noreferrer"><Icon n="site" /><span>View website</span></a>
         </nav>
 

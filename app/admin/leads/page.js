@@ -62,6 +62,17 @@ export default function LeadsPage() {
     : from && to ? ` from ${fmtDay(from)} to ${fmtDay(to)}`
     : from ? ` since ${fmtDay(from)}` : to ? ` up to ${fmtDay(to)}` : "";
   const exportHref = `/api/admin/leads/export?${new URLSearchParams({ q, status, type, from, to })}`;
+  const filtered = Boolean(q || status || type || from || to);
+
+  // share the current filters with the sidebar's "Export" quick action
+  useEffect(() => {
+    window.__anveyaLeadsExport = { href: exportHref, filtered };
+    window.dispatchEvent(new Event("anveya:leads-filter"));
+  }, [exportHref, filtered]);
+  useEffect(() => () => {
+    window.__anveyaLeadsExport = null;
+    window.dispatchEvent(new Event("anveya:leads-filter"));
+  }, []);
 
   const open = (r) => { setSel(r); setNotes(r.notes || ""); };
 
@@ -112,7 +123,7 @@ export default function LeadsPage() {
     <>
       <div className="adm-head">
         <div><h1>Leads</h1><p>{total} enquir{total === 1 ? "y" : "ies"}{rangeText} from the website forms.</p></div>
-        <a className="abtn ghost" href={exportHref}>Export CSV</a>
+        <a className="abtn ghost" href={exportHref} title={filtered ? "Downloads only the leads matching the current filters" : "Downloads all leads"}>{filtered ? `Export ${total} filtered (CSV)` : "Export all (CSV)"}</a>
       </div>
 
       <div className="toolbar">
@@ -140,7 +151,7 @@ export default function LeadsPage() {
           <span>To</span>
           <input type="date" className="inp" value={to} min={from || undefined} onChange={(e) => setDate("to", e.target.value)} />
         </label>
-        {(from || to) && <button className="abtn ghost sm" onClick={clearDates}>Show all months</button>}
+        {(from || to) && <button type="button" className="datebar-btn" onClick={clearDates}>Show all months</button>}
       </div>
 
       {picked.size > 0 && (

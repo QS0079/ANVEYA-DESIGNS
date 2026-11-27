@@ -338,3 +338,9 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
 .mstep { box-sizing: border-box; max-width: 100%; }
 .datebar .fld { min-width: 0; }
 @media (max-width: 640px) { .mstep .mstep-sel { padding-right: 22px; font-size: 13px; } }
+
+/* "Show all months" — matches the month stepper and date fields */
+.datebar-btn { height: 44px; box-sizing: border-box; padding: 0 18px; font: inherit; font-size: 13.5px; font-weight: 500; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 2px; cursor: pointer; white-space: nowrap; transition: background-color .25s, color .25s, border-color .25s; }
+.datebar-btn:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.datebar-btn:focus-visible { outline: none; box-shadow: inset 0 0 0 1px var(--ink); }
+@media (max-width: 640px) { .datebar .datebar-btn { grid-column: 1 / -1; width: 100%; } }

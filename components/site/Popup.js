@@ -8,7 +8,7 @@ import { IMG, POPUP_AUTO_OPEN_SECONDS } from "@/lib/defaults";
 
 /**
  * Enquiry popup. Opens on window event "anveya:popup" (every #enquiry / data-popup link),
- * and once per visit automatically after POPUP_AUTO_OPEN_SECONDS.
+ * and automatically every POPUP_AUTO_OPEN_SECONDS while closed.
  */
 export default function Popup() {
   const pathname = usePathname();
@@ -35,16 +35,19 @@ export default function Popup() {
   }, [show]);
 
   // Auto-open every POPUP_AUTO_OPEN_SECONDS while closed (timer restarts after each close and on
-  // every page change). Stops for good once the visitor has submitted an enquiry.
+  // every page change) — including after the visitor has already submitted an enquiry.
   useEffect(() => {
     if (!POPUP_AUTO_OPEN_SECONDS || open) return;
-    let sent = false;
-    try { sent = !!localStorage.getItem("anveya_enquiry_sent"); } catch {}
-    if (sent) return;
-    const t = setTimeout(() => {
-      if (document.querySelector(".lightbox") || document.documentElement.classList.contains("menu-open")) return;
+    let t;
+    const attempt = () => {
+      // a full-screen photo or the mobile menu is open — try again shortly instead of skipping
+      if (document.querySelector(".lightbox") || document.documentElement.classList.contains("menu-open")) {
+        t = setTimeout(attempt, 5000);
+        return;
+      }
       show();
-    }, POPUP_AUTO_OPEN_SECONDS * 1000);
+    };
+    t = setTimeout(attempt, POPUP_AUTO_OPEN_SECONDS * 1000);
     return () => clearTimeout(t);
   }, [open, pathname, show]);
 
